@@ -114,8 +114,24 @@ async function startBot() {
 
   sock.ev.on('creds.update', saveCreds);
 
-  sock.ev.on('connection.update', async (update) => {
-    const { connection, lastDisconnect, qr } = update;
+  // Request Pairing Code if not registered yet (Wait 6 seconds for connection handshake)
+  if (!sock.authState.creds.registered) {
+    setTimeout(async () => {
+      try {
+        console.log(`📲 Requesting 8-digit pairing code for +${CONFIG.PHONE_NUMBER}...`);
+        const code = await sock.requestPairingCode(CONFIG.PHONE_NUMBER);
+        console.log('\n======================================================');
+        console.log(`🔑 YOUR NEW PAIRING CODE: [ ${code} ]`);
+        console.log('Open WhatsApp -> Linked Devices -> Link with phone number');
+        console.log('======================================================\n');
+      } catch (err) {
+        console.log('Pairing notice:', err.message);
+      }
+    }, 6000);
+  }
+
+  sock.ev.on('connection.update', (update) => {
+    const { connection, lastDisconnect } = update;
     
     if (connection === 'connecting') {
       console.log('⏳ WhatsApp connecting in progress...');
@@ -123,32 +139,13 @@ async function startBot() {
 
     if (connection === 'close') {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
-      const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
-      console.log(`⚠️ Connection closed (code: ${statusCode}). Reconnecting: ${shouldReconnect}`);
-      if (shouldReconnect) {
-        setTimeout(startBot, 3000);
-      } else {
-        console.log('❌ Device logged out. Requesting fresh pairing code...');
-      }
+      console.log(`⚠️ Connection state: ${statusCode}`);
+      setTimeout(startBot, 4000);
     } else if (connection === 'open') {
       console.log('\n======================================================');
       console.log('🎉 BOT 100% ONLINE & LISTENING TO 5 TARGET GROUPS:');
       CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
       console.log('======================================================\n');
-    }
-
-    // If session is lost and needs pairing code
-    if (!sock.authState.creds.registered && !sock.authState.creds.me) {
-      try {
-        console.log(`📲 Requesting pairing code for +${CONFIG.PHONE_NUMBER}...`);
-        const code = await sock.requestPairingCode(CONFIG.PHONE_NUMBER);
-        console.log('\n======================================================');
-        console.log(`🔑 YOUR 8-DIGIT PAIRING CODE: [ ${code} ]`);
-        console.log('Open WhatsApp -> Linked Devices -> Link with phone number');
-        console.log('======================================================\n');
-      } catch (err) {
-        console.error('Pairing code error:', err.message);
-      }
     }
   });
 
