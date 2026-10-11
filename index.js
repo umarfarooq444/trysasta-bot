@@ -3,6 +3,8 @@
  * Upgraded with Multi-Message Buffer (Images first, Description later support)
  */
 
+console.log('🚀 [TRY SASTA BOT] Initializing engine...');
+
 const {
   default: makeWASocket,
   DisconnectReason,
@@ -34,7 +36,6 @@ const CONFIG = {
 };
 
 // IN-MEMORY BUFFER: Stores the most recent image for each group (valid for 5 minutes)
-// This handles: Seller sends 5 pictures first, then description text message 30 seconds later!
 const GROUP_IMAGE_BUFFER = new Map();
 
 async function uploadImageToCDN(buffer) {
@@ -55,8 +56,6 @@ async function uploadImageToCDN(buffer) {
 function parseCaption(text) {
   if (!text) return null;
 
-  // Flexible price match:
-  // e.g. "Rate: 2400", "Price 2600", "Cash on Delivery 2900", "Advance payment 2750", "2850 2750"
   let wholesale = null;
 
   // Match Advance / Wholesale payment rates
@@ -67,7 +66,6 @@ function parseCaption(text) {
     // Or match standalone 4-digit numbers like 2750, 2850
     const rawNumbers = text.match(/\b([1-9]\d{3})\b/g);
     if (rawNumbers && rawNumbers.length > 0) {
-      // Pick the wholesale price
       wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
     }
   }
@@ -99,8 +97,11 @@ function parseCaption(text) {
 }
 
 async function startBot() {
+  console.log('🔄 Loading WhatsApp auth credentials...');
   const { state, saveCreds } = await useMultiFileAuthState('./session_data');
   const { version } = await fetchLatestBaileysVersion();
+
+  console.log(`📡 Connecting to WhatsApp Web (v${version.join('.')})...`);
 
   const sock = makeWASocket({
     version,
@@ -113,16 +114,41 @@ async function startBot() {
 
   sock.ev.on('creds.update', saveCreds);
 
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect } = update;
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update;
+    
+    if (connection === 'connecting') {
+      console.log('⏳ WhatsApp connecting in progress...');
+    }
+
     if (connection === 'close') {
-      const reconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-      if (reconnect) startBot();
+      const statusCode = lastDisconnect?.error?.output?.statusCode;
+      const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+      console.log(`⚠️ Connection closed (code: ${statusCode}). Reconnecting: ${shouldReconnect}`);
+      if (shouldReconnect) {
+        setTimeout(startBot, 3000);
+      } else {
+        console.log('❌ Device logged out. Requesting fresh pairing code...');
+      }
     } else if (connection === 'open') {
       console.log('\n======================================================');
-      console.log('🎉 BOT LOCKED & ACTIVE FOR 5 TARGET WHOLESALE COMMUNITIES:');
+      console.log('🎉 BOT 100% ONLINE & LISTENING TO 5 TARGET GROUPS:');
       CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
       console.log('======================================================\n');
+    }
+
+    // If session is lost and needs pairing code
+    if (!sock.authState.creds.registered && !sock.authState.creds.me) {
+      try {
+        console.log(`📲 Requesting pairing code for +${CONFIG.PHONE_NUMBER}...`);
+        const code = await sock.requestPairingCode(CONFIG.PHONE_NUMBER);
+        console.log('\n======================================================');
+        console.log(`🔑 YOUR 8-DIGIT PAIRING CODE: [ ${code} ]`);
+        console.log('Open WhatsApp -> Linked Devices -> Link with phone number');
+        console.log('======================================================\n');
+      } catch (err) {
+        console.error('Pairing code error:', err.message);
+      }
     }
   });
 
@@ -197,7 +223,6 @@ async function startBot() {
         });
 
         console.log(`🎉 LIVE POSTED TO trysasta.com & GOOGLE SHEET!\n`);
-        // Clear buffer once posted
         GROUP_IMAGE_BUFFER.delete(fromJid);
       } catch (err) {
         console.error('Webhook sync error:', err.message);
