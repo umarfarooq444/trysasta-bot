@@ -1,0 +1,16 @@
+{
+  "name": "trysasta-whatsapp-auto-bot",
+  "version": "1.0.0",
+  "description": "24/7 WhatsApp Community Auto-Fetcher for TRY SASTA (trysasta.com)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",
+    "axios": "^1.6.8",
+    "form-data": "^4.0.0",
+    "pino": "^8.19.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
