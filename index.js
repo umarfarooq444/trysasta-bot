@@ -1,6 +1,11 @@
 /**
- * TRY SASTA - Robust WhatsApp Auto-Listing Bot (Stable Linking Fix)
- * Phone: 923056387607
+ * TRY SASTA (trysasta.com) - 24/7 Wholesaler Auto-Bot
+ * TARGET COMMUNITIES FILTER LOCKED:
+ * 1. AH Textile Collection
+ * 2. AL-KABIR TEXTILE 1 (SUPER WHOLESALE GROUP)
+ * 3. Today's Fashion
+ * 4. kainaat textile New
+ * 5. MTN Textile
  */
 
 const { 
@@ -15,12 +20,22 @@ const pino = require('pino');
 const axios = require('axios');
 const FormData = require('form-data');
 
+// CONFIGURATION
 const CONFIG = {
   PHONE_NUMBER: '923056387607',
   SITE_WEBHOOK_URL: 'https://trysasta.com/api/webhook_sync.php',
   WEBHOOK_TOKEN: 'trysasta_secret_pass_2026',
   PROFIT_MARKUP_PERCENT: 35,
-  IMGBB_API_KEY: process.env.IMGBB_API_KEY || '6d207e02198a847aa5a0a0a3b90143bc'
+  IMGBB_API_KEY: process.env.IMGBB_API_KEY || '6d207e02198a847aa5a0a0a3b90143bc',
+
+  // LOCKED APPROVED WHOLESALE COMMUNITIES ONLY
+  TARGET_GROUPS: [
+    'AH Textile Collection',
+    'AL-KABIR TEXTILE',
+    "Today's Fashion",
+    'kainaat textile New',
+    'MTN Textile'
+  ]
 };
 
 async function uploadImageToCDN(buffer) {
@@ -70,39 +85,24 @@ async function startBot() {
     auth: state,
     logger: pino({ level: 'silent' }),
     printQRInTerminal: false,
-    // Fix: Emulates real Chrome on Ubuntu to avoid "something went wrong" handshake drops
     browser: Browsers.ubuntu('Chrome'),
-    syncFullHistory: false, // Prevents loading freeze
-    generateHighQualityLinkPreview: true
+    syncFullHistory: false
   });
 
   sock.ev.on('creds.update', saveCreds);
 
-  // REQUEST CODE IF NOT REGISTERED
-  if (!sock.authState.creds.registered) {
-    setTimeout(async () => {
-      try {
-        const pairingCode = await sock.requestPairingCode(CONFIG.PHONE_NUMBER);
-        console.log('\n======================================================');
-        console.log('🔑 AAPKA NAYA WHATSAPP CODE HAI:');
-        console.log(`👉  [  ${pairingCode}  ]  👈`);
-        console.log('======================================================\n');
-      } catch (err) {
-        console.error('Pairing code request error:', err.message);
-      }
-    }, 6000);
-  }
-
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
     if (connection === 'close') {
-      const statusCode = lastDisconnect?.error?.output?.statusCode;
-      const reconnect = statusCode !== DisconnectReason.loggedOut;
-      console.log('Connection closed, reconnecting...', reconnect);
+      const reconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
       if (reconnect) startBot();
     } else if (connection === 'open') {
-      console.log('\n🎉 SUCCESS! WhatsApp (+923056387607) Connected Successfully!');
-      console.log('24/7 Wholesaler Auto-Sync is now 100% active for trysasta.com!\n');
+      console.log('\n======================================================');
+      console.log('🎉 BOT LOCKED & ACTIVE FOR 5 TARGET WHOLESALE COMMUNITIES:');
+      CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
+      console.log('------------------------------------------------------');
+      console.log('All other personal/family groups will be 100% IGNORED.');
+      console.log('======================================================\n');
     }
   });
 
@@ -110,15 +110,39 @@ async function startBot() {
     const msg = messages[0];
     if (!msg.message || msg.key.fromMe) return;
 
+    const fromJid = msg.key.remoteJid;
+    // Sirf Groups ko process karein
+    if (!fromJid.endsWith('@g.us')) return;
+
+    // Fetch Group Subject
+    let groupSubject = '';
+    try {
+      const groupMeta = await sock.groupMetadata(fromJid);
+      groupSubject = groupMeta.subject || '';
+    } catch (e) {
+      // fallback
+    }
+
+    // STRICT CHECK: Is this message from one of our approved wholesale groups?
+    const isApprovedGroup = CONFIG.TARGET_GROUPS.some(allowedName => 
+      groupSubject.toLowerCase().includes(allowedName.toLowerCase())
+    );
+
+    if (!isApprovedGroup) {
+      // Agar in 5 groups me se nahi hai toh foran discard kar do!
+      return;
+    }
+
     const imageMessage = msg.message.imageMessage;
     const caption = imageMessage?.caption || msg.message.conversation || msg.message.extendedTextMessage?.text;
 
     if (!imageMessage || !caption) return;
 
     const parsed = parseCaption(caption);
-    if (!parsed) return;
+    if (!parsed) return; // ignore posts without wholesale rate
 
-    console.log(`\n⚡ Wholesaler Suit Received: ${parsed.title} | Retail: Rs. ${parsed.retailPrice}`);
+    console.log(`\n⚡ [FROM: ${groupSubject}] New Suit Detected: ${parsed.title}`);
+    console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> TRY SASTA Selling Rate: Rs. ${parsed.retailPrice}`);
 
     try {
       const buffer = await downloadMediaMessage(msg, 'buffer', {});
@@ -135,9 +159,9 @@ async function startBot() {
         headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` }
       });
 
-      console.log('🎉 Successfully published to trysasta.com storefront!');
+      console.log(`🎉 Live Posted to trysasta.com from "${groupSubject}"!\n`);
     } catch (err) {
-      console.error('Webhook sync failed:', err.message);
+      console.error('Webhook sync error:', err.message);
     }
   });
 }
