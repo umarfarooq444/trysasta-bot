@@ -1,17 +1,12 @@
 /**
- * TRY SASTA (trysasta.com) - 24/7 Wholesaler Auto-Bot
- * TARGET COMMUNITIES FILTER LOCKED:
- * 1. AH Textile Collection
- * 2. AL-KABIR TEXTILE 1 (SUPER WHOLESALE GROUP)
- * 3. Today's Fashion
- * 4. kainaat textile New
- * 5. MTN Textile
+ * TRY SASTA (trysasta.com) - 24/7 Automated WhatsApp Wholesale Dropship Bot
+ * Upgraded with Multi-Message Buffer (Images first, Description later support)
  */
 
-const { 
-  default: makeWASocket, 
-  useMultiFileAuthState, 
-  DisconnectReason, 
+const {
+  default: makeWASocket,
+  DisconnectReason,
+  useMultiFileAuthState,
   downloadMediaMessage,
   Browsers,
   fetchLatestBaileysVersion
@@ -38,6 +33,10 @@ const CONFIG = {
   ]
 };
 
+// IN-MEMORY BUFFER: Stores the most recent image for each group (valid for 5 minutes)
+// This handles: Seller sends 5 pictures first, then description text message 30 seconds later!
+const GROUP_IMAGE_BUFFER = new Map();
+
 async function uploadImageToCDN(buffer) {
   try {
     const form = new FormData();
@@ -55,23 +54,46 @@ async function uploadImageToCDN(buffer) {
 
 function parseCaption(text) {
   if (!text) return null;
-  const priceRegex = /(?:rate|price|rs\.?|wholesale|final)\s*[:=\-]?\s*(\d{3,5})/i;
-  const match = text.match(priceRegex);
-  if (!match) return null;
 
-  const wholesale = parseInt(match[1], 10);
-  const retail = Math.round((wholesale * (1 + CONFIG.PROFIT_MARKUP_PERCENT / 100)) / 50) * 50;
+  // Flexible price match:
+  // e.g. "Rate: 2400", "Price 2600", "Cash on Delivery 2900", "Advance payment 2750", "2850 2750"
+  let wholesale = null;
 
-  let category = 'MISCELLANEOUS';
-  const lower = text.toLowerCase();
-  if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear')) {
-    category = 'GENTS';
-  } else if (lower.includes('lawn') || lower.includes('ladies') || lower.includes('suit') || lower.includes('dupatta')) {
-    category = 'LAWN';
+  // Match Advance / Wholesale payment rates
+  const advanceMatch = text.match(/(?:advance\s*payment|advance|wholesale|rate|price|cod|cash\s*on\s*delivery)\s*[:=\-]?\s*(\d{3,5})/i);
+  if (advanceMatch) {
+    wholesale = parseInt(advanceMatch[1], 10);
+  } else {
+    // Or match standalone 4-digit numbers like 2750, 2850
+    const rawNumbers = text.match(/\b([1-9]\d{3})\b/g);
+    if (rawNumbers && rawNumbers.length > 0) {
+      // Pick the wholesale price
+      wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
+    }
   }
 
-  const rawTitle = text.split('\n')[0].replace(/[*_~]/g, '').trim();
-  const title = rawTitle.length > 5 ? rawTitle.slice(0, 60) : `TRY SASTA - New Arrival (${category})`;
+  if (!wholesale || wholesale < 800 || wholesale > 25000) return null;
+
+  // Selling rate with retail markup
+  const retail = Math.round((wholesale * (1 + CONFIG.PROFIT_MARKUP_PERCENT / 100)) / 50) * 50;
+
+  let category = 'LAWN_3PC';
+  const lower = text.toLowerCase();
+  if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear') || lower.includes('cotton fabric')) {
+    category = 'GENTS';
+  } else if (lower.includes('2pc') || lower.includes('2-pc') || lower.includes('2 piece')) {
+    category = 'LAWN_2PC';
+  } else if (lower.includes('bed') || lower.includes('sheet')) {
+    category = 'BEDSHEETS';
+  } else {
+    category = 'LAWN_3PC';
+  }
+
+  // Extract clean suit title from first two lines
+  const lines = text.split('\n').map(l => l.replace(/[*_~•✨🔥]/g, '').trim()).filter(l => l.length > 2);
+  let title = lines.slice(0, 2).join(' - ');
+  if (!title || title.length < 5) title = `TRY SASTA Luxury Collection (${category})`;
+  if (title.length > 65) title = title.substring(0, 65);
 
   return { title, wholesaleRate: wholesale, retailPrice: retail, category };
 }
@@ -100,8 +122,6 @@ async function startBot() {
       console.log('\n======================================================');
       console.log('🎉 BOT LOCKED & ACTIVE FOR 5 TARGET WHOLESALE COMMUNITIES:');
       CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
-      console.log('------------------------------------------------------');
-      console.log('All other personal/family groups will be 100% IGNORED.');
       console.log('======================================================\n');
     }
   });
@@ -111,10 +131,8 @@ async function startBot() {
     if (!msg.message || msg.key.fromMe) return;
 
     const fromJid = msg.key.remoteJid;
-    // Sirf Groups ko process karein
     if (!fromJid.endsWith('@g.us')) return;
 
-    // Fetch Group Subject
     let groupSubject = '';
     try {
       const groupMeta = await sock.groupMetadata(fromJid);
@@ -123,45 +141,67 @@ async function startBot() {
       // fallback
     }
 
-    // STRICT CHECK: Is this message from one of our approved wholesale groups?
+    // STRICT CHECK: Is this message from one of our 5 approved wholesale groups?
     const isApprovedGroup = CONFIG.TARGET_GROUPS.some(allowedName => 
       groupSubject.toLowerCase().includes(allowedName.toLowerCase())
     );
 
-    if (!isApprovedGroup) {
-      // Agar in 5 groups me se nahi hai toh foran discard kar do!
-      return;
+    if (!isApprovedGroup) return;
+
+    const isImage = !!msg.message.imageMessage;
+    const incomingText = msg.message.imageMessage?.caption || 
+                         msg.message.conversation || 
+                         msg.message.extendedTextMessage?.text || '';
+
+    // CASE 1: Seller sends IMAGE first (save buffer for this group)
+    if (isImage) {
+      try {
+        const imgBuffer = await downloadMediaMessage(msg, 'buffer', {});
+        GROUP_IMAGE_BUFFER.set(fromJid, {
+          buffer: imgBuffer,
+          timestamp: Date.now()
+        });
+        console.log(`📸 Cached new suit photo from group: "${groupSubject}" (Waiting for description...)`);
+      } catch (err) {
+        console.error('Image download error:', err.message);
+      }
     }
 
-    const imageMessage = msg.message.imageMessage;
-    const caption = imageMessage?.caption || msg.message.conversation || msg.message.extendedTextMessage?.text;
+    // CASE 2: Text description received (either in image caption OR standalone text message)
+    if (incomingText && incomingText.length > 10) {
+      const parsed = parseCaption(incomingText);
+      if (!parsed) return; // No price detected
 
-    if (!imageMessage || !caption) return;
+      // Check if we have an image for this group in buffer (received within last 5 minutes)
+      const cached = GROUP_IMAGE_BUFFER.get(fromJid);
+      let cdnImageUrl = 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600';
 
-    const parsed = parseCaption(caption);
-    if (!parsed) return; // ignore posts without wholesale rate
+      if (cached && (Date.now() - cached.timestamp < 300000)) {
+        cdnImageUrl = await uploadImageToCDN(cached.buffer);
+      }
 
-    console.log(`\n⚡ [FROM: ${groupSubject}] New Suit Detected: ${parsed.title}`);
-    console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> TRY SASTA Selling Rate: Rs. ${parsed.retailPrice}`);
+      console.log(`\n⚡ [MATCHED SUIT FROM: ${groupSubject}]`);
+      console.log(`👗 Title: ${parsed.title}`);
+      console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> Retail: Rs. ${parsed.retailPrice}`);
 
-    try {
-      const buffer = await downloadMediaMessage(msg, 'buffer', {});
-      const cdnImageUrl = await uploadImageToCDN(buffer);
+      try {
+        await axios.post(CONFIG.SITE_WEBHOOK_URL, {
+          title: parsed.title,
+          category: parsed.category,
+          wholesaleRate: parsed.wholesaleRate,
+          retailPrice: parsed.retailPrice,
+          imageUrl: cdnImageUrl,
+          tag: 'JUST ARRIVED'
+        }, {
+          headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` }
+        });
 
-      await axios.post(CONFIG.SITE_WEBHOOK_URL, {
-        title: parsed.title,
-        category: parsed.category,
-        wholesaleRate: parsed.wholesaleRate,
-        retailPrice: parsed.retailPrice,
-        imageUrl: cdnImageUrl,
-        tag: 'NEW DROP'
-      }, {
-        headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` }
-      });
-
-      console.log(`🎉 Live Posted to trysasta.com from "${groupSubject}"!\n`);
-    } catch (err) {
-      console.error('Webhook sync error:', err.message);
+        console.log(`🎉 LIVE POSTED TO trysasta.com & GOOGLE SHEET!\n`);
+        // Clear buffer once posted
+        GROUP_IMAGE_BUFFER.delete(fromJid);
+      } catch (err) {
+        console.error('Webhook sync error:', err.message);
+      }
     }
   });
 }
