@@ -95,15 +95,26 @@ function parseCaption(text) {
 
   let wholesale = null;
 
-  // Match Advance / Wholesale payment rates
-  const advanceMatch = text.match(/(?:advance\s*payment|advance|wholesale\s*price|wholesale|rate|price|cod|cash\s*on\s*delivery)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
-  if (advanceMatch) {
-    wholesale = parseInt(advanceMatch[1], 10);
+  // 1. First priority: Specifically match Wholesale Price, Discounted Price, Reseller Price, or Final Price
+  const wholesaleMatch = text.match(/(?:wholesale\s*price|wholesale|discounted\s*price|discount\s*price|reseller\s*price|final\s*price|dealer\s*price|net\s*rate|cash\s*on\s*delivery|cod|advance\s*payment|advance)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
+  if (wholesaleMatch) {
+    wholesale = parseInt(wholesaleMatch[1], 10);
   } else {
-    // Or match standalone 4-digit numbers like 2750, 3900, 1750
-    const rawNumbers = text.match(/\b([1-9]\d{3})\b/g);
-    if (rawNumbers && rawNumbers.length > 0) {
-      wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
+    // 2. Remove TAG Price and Retail Price lines so they are NEVER picked up by fallback
+    const filteredText = text
+      .split('\n')
+      .filter(line => !line.match(/(?:tag\s*price|retail\s*price|mrp\b|shop\s*price)/i))
+      .join('\n');
+
+    const priceMatch = filteredText.match(/(?:rate|price)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
+    if (priceMatch) {
+      wholesale = parseInt(priceMatch[1], 10);
+    } else {
+      // 3. Fallback: match 4-digit numbers in text that does NOT contain TAG Price
+      const rawNumbers = filteredText.match(/\b([1-9]\d{3})\b/g);
+      if (rawNumbers && rawNumbers.length > 0) {
+        wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
+      }
     }
   }
 
