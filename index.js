@@ -122,12 +122,12 @@ function parseCaption(text) {
 
   let category = 'LAWN_3PC';
   const lower = text.toLowerCase();
-  if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear') || lower.includes('cotton fabric')) {
-    category = 'GENTS';
-  } else if (lower.includes('razae') || lower.includes('bed') || lower.includes('sheet') || lower.includes('pillow')) {
+  if (lower.includes('razae') || lower.includes('bed') || lower.includes('sheet') || lower.includes('pillow') || lower.includes('cushion') || lower.includes('palachi')) {
     category = 'BEDSHEETS';
-  } else if (lower.includes('2pc') || lower.includes('2-pc') || lower.includes('2 piece')) {
-    category = 'LAWN_2PC';
+  } else if (lower.includes('maria b') || lower.includes('kids') || lower.includes('ladies') || lower.includes('lawn') || lower.includes('dhanak') || lower.includes('linen') || lower.includes('karandi') || lower.includes('kurti') || lower.includes('dupatta') || lower.includes('chiffon') || (lower.includes('shawl') && !lower.includes('men')) || lower.includes('frock')) {
+    category = (lower.includes('2pc') || lower.includes('2-pc') || lower.includes('2 piece')) ? 'LAWN_2PC' : 'LAWN_3PC';
+  } else if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear') || lower.includes('cotton fabric') || lower.includes('skardu wool')) {
+    category = 'GENTS';
   } else {
     category = 'LAWN_3PC';
   }
