@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRY SASTA — Premium Apparel & Fabric Outlet | Online Store Pakistan</title>
+  <meta name="description" content="Shop luxury Ladies Lawn 3-Piece, Chiffon suits, Gents Boski & Cotton fabrics, and export bed linen. Express Cash on Delivery in 2-5 days nationwide." />
+  
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  
+  <!-- Modern Clean Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+<style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f7f5f0; }
+    .glass-header { background: rgba(247, 245, 240, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .luxury-card { background: #ffffff; border: 1px solid #ede8df; box-shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.04); }
+    .luxury-pill { background: #ede8df; }
+    .luxury-pill-active { background: #1c1917; color: #ffffff; }
+
+    /* SMOOTH LUXURY ANIMATIONS */
+    @keyframes subtleGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animated-banner {
+      background: linear-gradient(90deg, #1c1917, #292524, #1c1917, #3f2e24);
+      background-size: 300% 300%;
+      animation: subtleGradient 10s ease infinite;
+    }
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .floating-whatsapp {
+      animation: floatBob 3s ease-in-out infinite;
+    }
+    @keyframes popIn {
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .social-proof-enter {
+      animation: popIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#f7f5f0] text-stone-800 antialiased selection:bg-stone-900 selection:text-white min-h-screen flex flex-col justify-between">
+
+  <!-- TOP ANNOUNCEMENT BAR (ANIMATED SUBTLE GRADIENT) -->
+  <div class="animated-banner text-stone-200 text-[11px] sm:text-xs py-2.5 px-4 border-b border-stone-800 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Express Delivery in <strong>2-5 Working Days</strong> Nationwide</span>
+      </div>
+      <div class="hidden sm:flex items-center space-x-5 text-stone-400 text-[11px]">
+        <span><i class="fa-solid fa-truck text-stone-400 mr-1"></i> Cash on Delivery Available</span>
+        <span>•</span>
+        <a href="https://wa.me/923056387607" target="_blank" class="hover:text-emerald-400 text-white font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> WhatsApp Helpline: 0305-6387607
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 glass-header border-b border-stone-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Modern Logo -->
+      <a href="javascript:showPage('home')" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center text-stone-100 font-black text-lg tracking-tighter shadow-md group-hover:bg-emerald-700 transition duration-300">
+          TS
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-baseline space-x-1">
+            <span class="text-xl sm:text-2xl font-black tracking-tight text-stone-900">TRY SASTA</span>
+            <span class="text-emerald-700 font-black text-xl">.</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Pure Clothing Navigation -->
+      <nav class="hidden md:flex items-center space-x-1 border-l border-stone-200 pl-6">
+        <button onclick="showPage('home')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-home">Home</button>
+        <button onclick="filterAndShowCategory('LAWN_3PC')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-lawn-3pc">Lawn 3-Piece</button>
+        <button onclick="filterAndShowCategory('LAWN_2PC')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-lawn-2pc">Lawn 2-Piece</button>
+        <button onclick="filterAndShowCategory('GENTS')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-gents">Gents Collection</button>
+        <button onclick="filterAndShowCategory('BEDSHEETS')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-bedsheets">Bed Linen</button>
+        <button onclick="showPage('track')" class="nav-btn text-xs font-bold text-stone-700 hover:text-stone-950 px-3.5 py-2 rounded-lg transition" id="nav-track">Track Order</button>
+      </nav>
+
+      <!-- Action Items -->
+      <div class="flex items-center space-x-3">
+        <!-- Live Search -->
+        <div class="relative hidden sm:block w-48 lg:w-60">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-stone-400 text-xs"></i>
+          <input type="text" id="liveSearchInput" onkeyup="handleSearch(this.value)" placeholder="Search lawn, boski, sheets..." class="w-full text-xs pl-8 pr-3 py-2 rounded-xl bg-white/80 border border-stone-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900 transition" />
+        </div>
+
+        <a href="https://wa.me/923056387607?text=Hello%20TRY%20SASTA,%20I%20want%20to%20inquire%20about%20your%20clothing%20catalog" target="_blank" class="text-xs font-bold text-stone-700 hover:text-stone-950 px-3 py-2 rounded-xl border border-stone-300 bg-white shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+          <span class="hidden sm:inline">WhatsApp Help</span>
+        </a>
+
+        <a href="#catalog" onclick="showPage('home')" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Shop Clothing</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- MAIN STOREFRONT -->
+  <!-- ============================================================== -->
+  <main id="page-home" class="flex-1">
+
+    <!-- HERO SECTION (CLEAN LUXURY LIGHT THEME) -->
+    <section class="relative bg-gradient-to-b from-[#f2efe9] via-[#f7f5f0] to-[#f7f5f0] text-stone-900 overflow-hidden py-16 sm:py-24 border-b border-stone-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          <div class="lg:col-span-7 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 bg-stone-200/80 border border-stone-300 text-stone-700 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5">
+              <span>Textile & Fabric Clearance Outlet</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight sm:leading-[1.15] text-stone-950">
+              Pure Fabrics & Suits, <br class="hidden sm:inline" />
+              <span class="text-emerald-800">
+                Direct Clearance Rates.
+              </span>
+            </h1>
+
+            <p class="mt-4 text-sm sm:text-base text-stone-600 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+              Explore authentic Ladies Lawn 3-Piece & 2-Piece, luxury unstitched Gents Boski & Cotton cuts, and export quality bedsheets. Guaranteed fabrics delivered to your doorstep in 2-5 days.
+            </p>
+
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <a href="#catalog" class="w-full sm:w-auto bg-stone-900 hover:bg-stone-800 text-white font-black px-7 py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                <span>BROWSE CLOTHING CATALOG</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </a>
+              <button onclick="filterAndShowCategory('LAWN_3PC')" class="w-full sm:w-auto bg-white hover:bg-stone-100 text-stone-900 font-bold px-6 py-3.5 rounded-xl border border-stone-300 shadow-sm transition text-sm">
+                Shop Lawn 3-Piece
+              </button>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-stone-200 grid grid-cols-3 gap-4 text-center lg:text-left text-xs">
+              <div>
+                <div class="text-xl sm:text-2xl font-black text-stone-950">2-5 Days</div>
+                <div class="text-stone-500 mt-0.5">Express Delivery</div>
+              </div>
+              <div>
+                <div class="text-xl sm:text-2xl font-black text-stone-950">Cash on Delivery</div>
+                <div class="text-stone-500 mt-0.5">Pay at Doorstep</div>
+              </div>
+              <div>
+                <div class="text-xl sm:text-2xl font-black text-stone-950">7-Day Warranty</div>
+                <div class="text-stone-500 mt-0.5">Exchange Guarantee</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Featured Hero Slider (Auto Rotating Showcase) -->
+          <div class="lg:col-span-5 relative">
+            <div class="relative mx-auto max-w-md rounded-3xl p-3 bg-white/95 border border-stone-200/90 shadow-2xl overflow-hidden group">
+              <!-- Slider Frame -->
+              <div id="heroSliderContainer" class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-stone-100 cursor-pointer shadow-inner">
+                <img id="heroSlideImg" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=85" alt="Featured Suit" class="w-full h-full object-cover transition-all duration-700 ease-out transform group-hover:scale-105" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent"></div>
+                
+                <span id="heroSlideBadge" class="absolute top-4 left-4 bg-stone-900/90 backdrop-blur text-white font-black text-[10px] px-3 py-1.5 rounded-xl uppercase tracking-wider shadow border border-white/10">
+                  HOT ARRIVAL
+                </span>
+
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span id="heroSlideCat" class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">LADIES LAWN 3-PIECE</span>
+                  </div>
+                  <h3 id="heroSlideTitle" class="text-base font-extrabold leading-snug drop-shadow-sm">Digital Printed Lawn 3-Pc with Chiffon Dupatta</h3>
+                  <div class="flex items-baseline space-x-3 mt-2">
+                    <span id="heroSlidePrice" class="text-2xl font-black text-white">Rs. 2,650</span>
+                    <span id="heroSlideOriginal" class="text-xs line-through text-stone-300">Rs. 3,800</span>
+                  </div>
+                </div>
+
+                <!-- Slider Navigation Arrows -->
+                <button onclick="event.stopPropagation(); prevHeroSlide()" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-stone-950/40 hover:bg-stone-950/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">
+                  <i class="fa-solid fa-chevron-left text-xs"></i>
+                </button>
+                <button onclick="event.stopPropagation(); nextHeroSlide()" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-stone-950/40 hover:bg-stone-950/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">
+                  <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+              </div>
+
+              <!-- Slider Dots -->
+              <div class="flex justify-center items-center gap-1.5 pt-3" id="heroSliderDots">
+                <span class="w-6 h-1.5 rounded-full bg-stone-900 transition-all"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <section class="bg-white/80 border-b border-stone-200 py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-stone-700">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-stone-100 text-stone-900 flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold uppercase text-stone-900 tracking-wider">Fast Dispatch</h4>
+              <p class="text-[11px] text-stone-500">2-5 Days delivery across Pakistan</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-stone-100 text-stone-900 flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold uppercase text-stone-900 tracking-wider">COD (Advance Req.)</h4>
+              <p class="text-[11px] text-stone-500">Rs. 200 advance courier to confirm</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-stone-100 text-stone-900 flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fa-solid fa-shirt"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold uppercase text-stone-900 tracking-wider">Fabric Guarantee</h4>
+              <p class="text-[11px] text-stone-500">Genuine thread count & colors</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-stone-100 text-stone-900 flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fa-solid fa-rotate-left"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold uppercase text-stone-900 tracking-wider">7-Day Warranty</h4>
+              <p class="text-[11px] text-stone-500">Hassle-free defective exchange</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOCUSED CLOTHING CATEGORIES STRIP -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-widest">Textile Collections</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-stone-900">Featured Fabric Lines</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Category 1: Lawn 3-Pc -->
+        <div onclick="filterAndShowCategory('LAWN_3PC')" class="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-stone-900 cursor-pointer shadow-sm hover:shadow-xl transition duration-300">
+          <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded text-white inline-block mb-1">Most Popular</span>
+            <h3 class="text-lg font-black">Ladies Lawn 3-Piece</h3>
+            <p class="text-xs text-stone-300 mt-0.5">Chiffon & Voil Dupattas from Rs. 2,450</p>
+          </div>
+        </div>
+
+        <!-- Category 2: Lawn 2-Pc -->
+        <div onclick="filterAndShowCategory('LAWN_2PC')" class="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-stone-900 cursor-pointer shadow-sm hover:shadow-xl transition duration-300">
+          <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded text-white inline-block mb-1">Casual Daily</span>
+            <h3 class="text-lg font-black">Ladies Lawn 2-Piece</h3>
+            <p class="text-xs text-stone-300 mt-0.5">Shirt & Trouser cuts from Rs. 1,799</p>
+          </div>
+        </div>
+
+        <!-- Category 3: Gents Collection -->
+        <div onclick="filterAndShowCategory('GENTS')" class="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-stone-900 cursor-pointer shadow-sm hover:shadow-xl transition duration-300">
+          <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded text-white inline-block mb-1">Men's Apparel</span>
+            <h3 class="text-lg font-black">Gents Boski & Cotton</h3>
+            <p class="text-xs text-stone-300 mt-0.5">4-Meter unstitched suits from Rs. 1,999</p>
+          </div>
+        </div>
+
+        <!-- Category 4: Bedsheets & Home Textile -->
+        <div onclick="filterAndShowCategory('BEDSHEETS')" class="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-stone-900 cursor-pointer shadow-sm hover:shadow-xl transition duration-300">
+          <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded text-white inline-block mb-1">Export Quality</span>
+            <h3 class="text-lg font-black">King Size Bed Sheets</h3>
+            <p class="text-xs text-stone-300 mt-0.5">Fitted & flat cotton bedsets from Rs. 1,650</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRODUCT CATALOG WITH CLICKABLE DETAIL VIEW -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" id="catalog">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Available Fabrics</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900" id="catalogTitle">All Clothing & Fabric Inventory</h2>
+        </div>
+
+        <!-- Pure Clothing Filter Pills -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl text-xs font-bold w-full md:w-auto">
+          <button onclick="filterCategory('ALL')" class="cat-pill bg-white text-slate-950 shadow-sm px-4 py-2 rounded-xl transition" data-category="ALL">All Items</button>
+          <button onclick="filterCategory('LAWN_3PC')" class="cat-pill text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition" data-category="LAWN_3PC">Lawn 3-Piece</button>
+          <button onclick="filterCategory('LAWN_2PC')" class="cat-pill text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition" data-category="LAWN_2PC">Lawn 2-Piece</button>
+          <button onclick="filterCategory('GENTS')" class="cat-pill text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition" data-category="GENTS">Gents Collection</button>
+          <button onclick="filterCategory('BEDSHEETS')" class="cat-pill text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition" data-category="BEDSHEETS">Bed Linen</button>
+        </div>
+      </div>
+
+      <!-- Live Product Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8" id="productGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- TRACK ORDER -->
+  <!-- ============================================================== -->
+  <main id="page-track" class="flex-1 hidden max-w-3xl mx-auto px-4 py-16 w-full">
+    <div class="bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200 text-center">
+      <div class="w-16 h-16 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fa-solid fa-truck-ramp-box"></i>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Track Your Order Status</h2>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">Enter your Order Reference ID (e.g., TS-123456) or your contact phone number.</p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+        <input type="text" id="trackInput" placeholder="Order ID or Mobile Number..." class="flex-1 text-sm px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900" />
+        <button onclick="executeTrackOrder()" class="bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Check Status</span>
+        </button>
+      </div>
+
+      <div id="trackResultBox" class="mt-8 text-left hidden"></div>
+    </div>
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- PRODUCT DETAILS MODAL (CLICK ON ANY SUIT) -->
+  <!-- ============================================================== -->
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductModal()" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative my-8 border border-slate-200 cursor-default">
+      <button type="button" onclick="closeProductModal()" title="Close" class="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 flex items-center justify-center transition shadow-sm z-50 cursor-pointer">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 shadow-inner">
+          <img id="detailImg" src="" class="w-full h-full object-cover" />
+          <span id="detailTag" class="absolute top-3 left-3 bg-slate-950 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider"></span>
+        </div>
+
+        <div class="flex flex-col justify-between h-full">
+          <div>
+            <span id="detailCategory" class="text-xs font-bold uppercase tracking-widest text-slate-400"></span>
+            <h3 id="detailTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug mt-1"></h3>
+            
+            <div class="flex items-baseline space-x-3 mt-3 pb-4 border-b border-slate-200">
+              <span id="detailPrice" class="text-3xl font-black text-slate-950"></span>
+              <span id="detailOriginal" class="text-sm line-through text-slate-400 font-semibold"></span>
+              <span class="text-xs bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded">Clearance Deal</span>
+            </div>
+
+            <div class="mt-4 space-y-2 text-xs text-slate-600 leading-relaxed">
+              <div class="font-bold uppercase tracking-wider text-slate-800 text-[11px]">Fabric Specifications:</div>
+              <ul class="space-y-1 list-disc list-inside text-slate-500" id="detailSpecs"></ul>
+            </div>
+
+            <div class="mt-5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center space-x-3">
+              <i class="fa-solid fa-truck-fast text-slate-800 text-base"></i>
+              <div>
+                <strong>Express Delivery:</strong> 2-5 working days nationwide with Cash on Delivery.
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-200">
+            <button id="detailOrderBtn" onclick="" class="w-full bg-slate-950 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-sm cursor-pointer">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>ORDER NOW</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="checkoutModal" onclick="if(event.target === this) closeCheckoutModal()" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative my-8 border border-slate-200 cursor-default">
+      <!-- High visibility prominent Close / Cut Button -->
+      <button type="button" onclick="closeCheckoutModal()" title="Close" class="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 flex items-center justify-center transition shadow-sm z-50 cursor-pointer">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center space-x-2 text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">
+        <i class="fa-solid fa-truck"></i>
+        <span>Express Delivery (2-5 Days)</span>
+      </div>
+      <h3 class="text-2xl font-black text-slate-900 mb-4">Customer Delivery Details</h3>
+
+      <div class="flex items-center space-x-4 bg-slate-50 border border-slate-200 p-3.5 rounded-2xl mb-5" id="checkoutProductPreview"></div>
+
+      <form onsubmit="handlePlaceOrder(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name *</label>
+          <input type="text" id="custName" required placeholder="e.g. Arham" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">WhatsApp / Contact Phone *</label>
+            <input type="tel" id="custPhone" required placeholder="0300 1234567" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Destination City *</label>
+            <input type="text" id="custCity" required placeholder="Lahore, Karachi, Islamabad..." class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Area / Sector / Colony *</label>
+            <input type="text" id="custArea" required placeholder="Gulberg, DHA, Bahria Town..." class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fabric Cutting / Sizing</label>
+            <select id="custSize" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white font-medium">
+              <option value="Unstitched (Standard Cut)">Unstitched (Standard Cut)</option>
+              <option value="Standard Size (Stitched)">Standard Size (Stitched)</option>
+              <option value="Medium (M)">Medium (M)</option>
+              <option value="Large (L)">Large (L)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Complete Delivery Address (House/Shop #, Street, Landmark) *</label>
+          <input type="text" id="custAddress" required placeholder="House 12, Street 4, Near Landmark" class="w-full text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+        </div>
+
+        <!-- COD Advance Notice & Account Details -->
+        <div class="bg-amber-50/80 border border-amber-200/80 p-4 rounded-2xl text-xs space-y-2">
+          <div class="flex items-center gap-2 font-black text-amber-900">
+            <i class="fa-solid fa-shield-halved text-amber-700 text-sm"></i>
+            <span>COD Policy: Rs. 200 Advance Required</span>
+          </div>
+          <p class="text-[11px] text-amber-800 leading-relaxed">
+            To prevent fake orders and avoid courier return losses, a small Rs. 200 delivery advance is required to confirm dispatch. The remaining balance is payable upon delivery via Cash on Delivery.
+          </p>
+          <div class="bg-white/90 border border-amber-200 p-2.5 rounded-xl text-[11px] space-y-1 text-slate-800 font-medium">
+            <div class="flex justify-between items-center">
+              <span><strong>JazzCash:</strong> 0305-6387607</span>
+              <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">TRY SASTA</span>
+            </div>
+            <div class="text-[10px] text-slate-600">Account Title: <strong class="text-slate-900">Umar Farooq</strong></div>
+          </div>
+        </div>
+
+        <!-- Coupon Discount Applied Banner (if won via Lucky Wheel) -->
+        <div id="couponAppliedBox" class="hidden bg-emerald-50 border border-emerald-200 p-3 rounded-2xl flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2 text-emerald-800 font-bold">
+            <i class="fa-solid fa-tag text-emerald-600"></i>
+            <span id="couponCodeLabel">LUCKY DISCOUNT APPLIED</span>
+          </div>
+          <span class="text-xs font-black text-emerald-700" id="couponDiscountLabel">- Rs. 150</span>
+        </div>
+
+        <!-- Clear Itemized Price Breakdown -->
+        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-2">
+          <div class="flex justify-between items-center text-slate-600">
+            <span>Suit Price:</span>
+            <span class="font-bold text-slate-900" id="checkoutItemPriceDisplay">Rs. 0</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-600">
+            <span>Express Courier Charge:</span>
+            <span class="font-bold text-slate-900" id="checkoutCourierDisplay">Rs. 200</span>
+          </div>
+          <div id="checkoutDiscountRow" class="hidden flex justify-between items-center text-emerald-700 font-bold">
+            <span id="checkoutDiscountReason">Lucky Coupon Discount:</span>
+            <span id="checkoutDiscountDeduction">- Rs. 0</span>
+          </div>
+          <div class="pt-2 border-t border-slate-200 flex justify-between items-baseline">
+            <div>
+              <div class="text-xs font-bold text-slate-900">Total Payable Amount:</div>
+              <div class="text-[10px] text-slate-500">Rs. 200 Advance + Remaining on Delivery</div>
+            </div>
+            <span class="text-2xl font-black text-slate-950" id="checkoutTotalDisplay">Rs. 0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <button type="submit" class="w-full bg-slate-950 hover:bg-slate-800 text-white font-black py-4 rounded-2xl shadow-xl transition flex items-center justify-center space-x-2 text-base cursor-pointer">
+            <i class="fa-solid fa-check"></i>
+            <span>SUBMIT ORDER (PAY RS. 200 ADVANCE)</span>
+          </button>
+          <button type="button" onclick="closeCheckoutModal()" class="w-full py-2.5 text-xs text-slate-500 hover:text-slate-800 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Cancel & Go Back to Products</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ORDER SUCCESS MODAL -->
+  <div id="successModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative border border-slate-200">
+      <div class="w-16 h-16 bg-slate-100 text-slate-950 rounded-full flex items-center justify-center mx-auto text-3xl mb-4">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 class="text-2xl font-black text-slate-900">Order Confirmed! 🎉</h3>
+      <p class="text-xs text-slate-500 mt-1">Thank you for your order with TRY SASTA.</p>
+      
+      <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl my-5 text-left text-xs space-y-1.5 font-mono">
+        <div><strong>Order Reference:</strong> <span id="successOrderRef" class="text-slate-950 font-bold"></span></div>
+        <div><strong>Customer:</strong> <span id="successName"></span></div>
+        <div><strong>Destination:</strong> <span id="successCity"></span></div>
+        <div><strong>Amount:</strong> <span id="successAmount" class="font-bold text-slate-900"></span></div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-left text-xs text-amber-900 mb-5">
+        <div class="font-bold mb-1 flex items-center gap-1.5">
+          <i class="fa-solid fa-receipt text-amber-700"></i>
+          <span>Final Step: Send Rs. 200 Advance Receipt</span>
+        </div>
+        <p class="text-[11px] text-amber-800 leading-normal">
+          Please transfer Rs. 200 via JazzCash to <strong>0305-6387607</strong> (Account Title: <strong>Umar Farooq</strong>) and share the screenshot on WhatsApp to confirm your courier dispatch.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <button onclick="window.open('https://wa.me/923056387607?text=' + encodeURIComponent('Hello TRY SASTA, I have placed order Ref: ' + document.getElementById('successOrderRef').innerText + '. Here is my Rs. 200 Advance payment receipt.'), '_blank')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Send Advance Receipt on WhatsApp</span>
+        </button>
+        <button onclick="closeSuccessModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs cursor-pointer">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- CLEAN LUXURY WARM FOOTER -->
+  <footer class="bg-[#ede8df] text-stone-700 text-xs py-14 border-t border-stone-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-stone-300">
+        
+        <div class="md:col-span-5">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-9 h-9 rounded-xl bg-stone-900 text-stone-100 flex items-center justify-center font-black text-base">
+              TS
+            </div>
+            <span class="text-xl font-black text-stone-900">TRY SASTA.</span>
+          </div>
+          <p class="mt-3 text-stone-600 max-w-sm text-xs leading-relaxed">
+            Pakistan's online clothing outlet offering authentic ladies lawn 3-piece, 2-piece suits, gents unstitched fabrics, and export bed linen with Cash on Delivery nationwide.
+          </p>
+          <div class="mt-4 flex items-center space-x-3 text-stone-800">
+            <span class="font-bold">Official Support:</span>
+            <a href="https://wa.me/923056387607" target="_blank" class="text-emerald-800 hover:underline font-mono font-bold">0305-6387607</a>
+          </div>
+        </div>
+
+        <div class="md:col-span-3">
+          <h4 class="text-stone-900 font-bold uppercase tracking-wider text-xs mb-3">Clothing Categories</h4>
+          <ul class="space-y-2 text-stone-600">
+            <li><a href="javascript:void(0)" onclick="filterAndShowCategory('LAWN_3PC')" class="hover:text-stone-950 transition">Ladies Lawn 3-Piece</a></li>
+            <li><a href="javascript:void(0)" onclick="filterAndShowCategory('LAWN_2PC')" class="hover:text-stone-950 transition">Ladies Lawn 2-Piece</a></li>
+            <li><a href="javascript:void(0)" onclick="filterAndShowCategory('GENTS')" class="hover:text-stone-950 transition">Gents Boski & Cotton</a></li>
+            <li><a href="javascript:void(0)" onclick="filterAndShowCategory('BEDSHEETS')" class="hover:text-stone-950 transition">King Size Bed Sheets</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-4">
+          <h4 class="text-stone-900 font-bold uppercase tracking-wider text-xs mb-3">Store Policies</h4>
+          <p class="text-stone-600 text-xs leading-relaxed">
+            All fabrics are inspected for defect-free weaving. Fast dispatch within 2-5 working days with checking warranty.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 gap-4">
+        <div>
+          © 2026 TRY SASTA (<a href="https://trysasta.com" class="text-stone-700 hover:text-stone-950 underline font-medium">trysasta.com</a>). All Rights Reserved.
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="javascript:showPage('track')" class="hover:text-stone-700">Track Order</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- FLOATING WHATSAPP QUICK CHAT BUTTON (MOST POPULAR IN PAKISTAN) -->
+  <!-- ============================================================== -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <!-- Tooltip badge -->
+    <div class="hidden sm:flex bg-white/95 backdrop-blur text-stone-800 text-xs font-bold px-3.5 py-2 rounded-2xl shadow-xl border border-stone-200 items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+      <span>Need help? Chat with us!</span>
+    </div>
+    <!-- Pulse Button -->
+    <a href="https://wa.me/923056387607?text=Hello%20TRY%20SASTA%2C%20I%20want%20to%20inquire%20about%20your%20clothing%20collection." target="_blank" class="floating-whatsapp w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center text-2xl shadow-2xl transition hover:scale-110 border-2 border-white cursor-pointer" title="Chat on WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- LIVE SOCIAL PROOF POPUP ("Someone from Lahore just bought...") -->
+  <!-- ============================================================== -->
+  <div id="socialProofPopup" class="fixed bottom-6 left-6 z-40 max-w-xs w-full bg-white/95 backdrop-blur-md rounded-2xl p-3.5 shadow-2xl border border-stone-200 hidden flex items-center gap-3 cursor-pointer transition-all duration-300" onclick="showRandomProductDetail()">
+    <img id="spImg" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-12 h-12 rounded-xl object-cover flex-shrink-0 shadow-sm" />
+    <div class="flex-1 min-w-0 text-left">
+      <div class="flex items-center justify-between text-[10px] text-stone-400">
+        <span class="font-bold text-emerald-700 flex items-center gap-1">
+          <i class="fa-solid fa-bag-shopping"></i> Verified Order
+        </span>
+        <span id="spTime" class="text-stone-400">Just now</span>
+      </div>
+      <h5 id="spCustomer" class="text-xs font-extrabold text-stone-900 truncate mt-0.5">Fatima from Lahore</h5>
+      <p id="spProduct" class="text-[11px] text-stone-600 truncate">Bought Lawn 3-Piece Suit</p>
+    </div>
+    <button onclick="event.stopPropagation(); document.getElementById('socialProofPopup').classList.add('hidden')" class="text-stone-400 hover:text-stone-600 text-xs px-1">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <!-- ============================================================== -->
+  <!-- FLOATING LUCKY GIFT BADGE (TRIGGER SPIN WHEEL ANYTIME) -->
+  <!-- ============================================================== -->
+  <button id="luckyGiftBtn" onclick="openSpinWheelModal()" class="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-black text-xs px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 transition hover:scale-105 cursor-pointer border-2 border-white">
+    <i class="fa-solid fa-gift text-base animate-bounce"></i>
+    <span class="hidden sm:inline">Spin & Win Coupon!</span>
+  </button>
+
+  <!-- ============================================================== -->
+  <!-- SPIN THE WHEEL / LUCKY DISCOUNT MODAL -->
+  <!-- ============================================================== -->
+  <div id="spinWheelModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative border border-stone-200 overflow-hidden">
+      <!-- Close Button -->
+      <button onclick="closeSpinWheelModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center text-sm font-bold transition cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>Try Sasta Lucky Draw</span>
+      </div>
+      <h3 class="text-xl font-black text-stone-900">Spin & Win Discount! 🎁</h3>
+      <p class="text-xs text-stone-500 mt-1">Spin the wheel to win up to Rs. 200 OFF or Free Delivery on your order.</p>
+
+      <!-- Wheel Graphic Container -->
+      <div class="relative w-64 h-64 mx-auto my-5 flex items-center justify-center">
+        <!-- Pointer Indicator -->
+        <div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 text-rose-600 text-2xl drop-shadow">
+          <i class="fa-solid fa-location-dot rotate-180"></i>
+        </div>
+
+        <!-- Rotating Canvas / Disc -->
+        <div id="wheelDisc" class="w-full h-full rounded-full border-4 border-stone-900 shadow-xl overflow-hidden relative transition-transform duration-[4000ms] cubic-bezier(0.15, 0.9, 0.2, 1) flex items-center justify-center" style="background: conic-gradient(#1c1917 0deg 60deg, #d97706 60deg 120deg, #10b981 120deg 180deg, #e11d48 180deg 240deg, #4f46e5 240deg 300deg, #b45309 300deg 360deg);">
+          <!-- Center Pin -->
+          <div class="w-14 h-14 rounded-full bg-white border-4 border-stone-900 shadow-md flex items-center justify-center font-black text-stone-900 text-xs z-10">
+            TS
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Box (Hidden Until Spin Completes) -->
+      <div id="spinResultBox" class="hidden bg-emerald-50 border border-emerald-200 p-3 rounded-2xl mb-4 text-xs">
+        <div class="font-extrabold text-emerald-900 text-sm" id="spinResultTitle">🎉 Congratulations! You Won Rs. 150 OFF</div>
+        <p class="text-[11px] text-emerald-800 mt-0.5" id="spinResultSub">Use Coupon Code: <strong class="bg-emerald-200 px-2 py-0.5 rounded font-mono" id="spinCouponCode">LUCKY150</strong></p>
+      </div>
+
+      <!-- Action Button -->
+      <button id="spinBtn" onclick="executeSpin()" class="w-full bg-stone-950 hover:bg-stone-800 text-white font-black py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-sm cursor-pointer">
+        <i class="fa-solid fa-arrows-rotate"></i>
+        <span>SPIN THE WHEEL NOW!</span>
+      </button>
+
+      <div class="text-[10px] text-stone-400 mt-3">
+        *1 Free Spin per customer. Discount automatically applied at checkout!
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // DUMMY BACKUP CATALOG (Will automatically be replaced once WhatsApp bot syncs live suits)
+    const DUMMY_PRODUCTS = [
+      {
+        id: "ts-101",
+        title: "Digital Printed Airjet Lawn 3-Piece with Crinkle Chiffon Dupatta",
+        category: "LAWN_3PC",
+        categoryName: "Ladies Lawn 3-Piece",
+        retail: 2650,
+        original: 3800,
+        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=700&q=80",
+        tag: "HOT LAWN",
+        specs: [
+          "Shirt: 1.75 Meters Digital Printed Fine Airjet 90/70 Lawn",
+          "Dupatta: 2.25 Meters Crinkle Chiffon Printed Matching Dupatta",
+          "Trouser: 2.0 Meters Solid Dyed Soft Cambric Fabric",
+          "100% Guaranteed color fastness & anti-shrink processing"
+        ]
+      },
+      {
+        id: "ts-102",
+        title: "Luxury Embroidered Chikankari Festive Lawn 3-Piece Suit",
+        category: "LAWN_3PC",
+        categoryName: "Ladies Lawn 3-Piece",
+        retail: 3250,
+        original: 4800,
+        image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=700&q=80",
+        tag: "FESTIVE EDITION",
+        specs: [
+          "Shirt: Heavy Chikankari Front with Embroidered Organza Daman Patch",
+          "Dupatta: Diamond Voil Soft Digital Printed Dupatta",
+          "Trouser: Dyed Cambric Trouser with Embroidered Bunch",
+          "Ideal for festive dinners and formal family gatherings"
+        ]
+      },
+      {
+        id: "ts-109",
+        title: "Agha Noor Inspired Organza Embroidered Luxury 3-Piece Suit",
+        category: "LAWN_3PC",
+        categoryName: "Ladies Lawn 3-Piece",
+        retail: 3499,
+        original: 5200,
+        image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80",
+        tag: "PARTY WEAR",
+        specs: [
+          "Shirt: Fully sequence embroidered front on pure lawn with neckline Patti",
+          "Dupatta: 2.5 Meters Heavy embroidered Organza borders dupatta",
+          "Trouser: Dyed cotton silk matching trouser",
+          "Exclusive wedding & formal festive collection"
+        ]
+      },
+      {
+        id: "ts-110",
+        title: "Sapphire Floral Fantasy Summer Lawn 3-Piece with Voil Dupatta",
+        category: "LAWN_3PC",
+        categoryName: "Ladies Lawn 3-Piece",
+        retail: 2799,
+        original: 3950,
+        image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=700&q=80",
+        tag: "TOP TRENDING",
+        specs: [
+          "Shirt: High-definition floral pastel digital printed lawn",
+          "Dupatta: Feather-light Swiss Voil matching printed dupatta",
+          "Trouser: Plain dyed breathable cambric",
+          "Cool pastel summer tones for daily elegance"
+        ]
+      },
+      {
+        id: "ts-111",
+        title: "Khaadi Classic Jacquard Woven Self-Print Lawn 3-Piece Suit",
+        category: "LAWN_3PC",
+        categoryName: "Ladies Lawn 3-Piece",
+        retail: 2950,
+        original: 4200,
+        image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=700&q=80",
+        tag: "JACQUARD WOVEN",
+        specs: [
+          "Shirt: 3.0 Meters Gold Zari Self-Jacquard textured lawn",
+          "Dupatta: Jacquard woven border contrast dupatta",
+          "Trouser: Solid dyed cambric unstitched fabric",
+          "Lustrous texture without any color fade"
+        ]
+      },
+      {
+        id: "ts-103",
+        title: "Floral Breeze Casual Daily Wear Lawn 2-Piece (Shirt & Trouser)",
+        category: "LAWN_2PC",
+        categoryName: "Ladies Lawn 2-Piece",
+        retail: 1799,
+        original: 2600,
+        image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=80",
+        tag: "DAILY CASUAL",
+        specs: [
+          "Shirt: 1.75 Meters Digital Printed Premium Lawn",
+          "Trouser: 2.0 Meters Matching Printed Cotton Cambric",
+          "Breathable summer weight, perfect for college & everyday home wear",
+          "Pre-shrunk fabric ensuring durable shape after regular wash"
+        ]
+      },
+      {
+        id: "ts-104",
+        title: "Classic All-Over Geometric Printed Lawn 2-Piece (Kurti & Shalwar)",
+        category: "LAWN_2PC",
+        categoryName: "Ladies Lawn 2-Piece",
+        retail: 1699,
+        original: 2450,
+        image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80",
+        tag: "SUMMER ESSENTIAL",
+        specs: [
+          "Continuous 3.75 Meters running cut for Kurti & Shalwar",
+          "Soft touch combed yarn preventing heat buildup",
+          "Minimal ironing required with vibrant reactive dyes"
+        ]
+      },
+      {
+        id: "ts-112",
+        title: "LimeLight Monochromatic Polka & Stripe Lawn 2-Piece Suit",
+        category: "LAWN_2PC",
+        categoryName: "Ladies Lawn 2-Piece",
+        retail: 1850,
+        original: 2550,
+        image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80",
+        tag: "MODERN CUT",
+        specs: [
+          "Shirt: 1.85 Meters high-density black & white printed lawn",
+          "Trouser: 2.0 Meters contrast matching solid cotton trouser",
+          "Smart modern print suitable for office & casual meetups",
+          "Smooth cooling texture and long-lasting fabric life"
+        ]
+      },
+      {
+        id: "ts-113",
+        title: "Ethnic Block-Print Inspired Vintage 2-Piece Lawn Suit",
+        category: "LAWN_2PC",
+        categoryName: "Ladies Lawn 2-Piece",
+        retail: 1750,
+        original: 2499,
+        image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80",
+        tag: "ETHNIC VINTAGE",
+        specs: [
+          "Shirt: Traditional handcrafted block-print style digital lawn",
+          "Trouser: Dyed premium cambric trouser",
+          "Rich ethnic borders included for sleeves and daman detailing",
+          "Colorfast guaranteed guaranteed wash after wash"
+        ]
+      },
+      {
+        id: "ts-114",
+        title: "Embroidered Neckline Pastel Pink Daily Lawn 2-Piece",
+        category: "LAWN_2PC",
+        categoryName: "Ladies Lawn 2-Piece",
+        retail: 1950,
+        original: 2850,
+        image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=700&q=80",
+        tag: "EMBROIDERED NECK",
+        specs: [
+          "Shirt: Fine lawn shirt with delicate threadwork embroidered neckline",
+          "Trouser: 2.0 Meters matching solid cambric cut",
+          "Soft baby pink tone with floral motifs",
+          "Semi-formal look at wholesale dropship price"
+        ]
+      },
+      {
+        id: "ts-105",
+        title: "Gents Original Fall Boski Unstitched Luxury Fabric (4 Meter)",
+        category: "GENTS",
+        categoryName: "Gents Collection",
+        retail: 2350,
+        original: 3400,
+        image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=700&q=80",
+        tag: "TOP SELLER",
+        specs: [
+          "Cutting: Standard 4.0 Meters full unstitched cut",
+          "Weave: Signature Boski heavy fall with silky soft matte drape",
+          "Shades: Classic Off-White / Natural Cream",
+          "Includes original engraved collar buttons and presentation bag"
+        ]
+      },
+      {
+        id: "ts-106",
+        title: "Men's Luxury Egyptian Combed Cotton Suit (4 Meter Cut)",
+        category: "GENTS",
+        categoryName: "Gents Collection",
+        retail: 1999,
+        original: 2900,
+        image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=700&q=80",
+        tag: "EGYPTIAN COTTON",
+        specs: [
+          "Cutting: 4.0 Meters full length cutting",
+          "100% Fine combed Egyptian cotton with crisp formal fall",
+          "High breathability suited for peak Pakistani summer months"
+        ]
+      },
+      {
+        id: "ts-107",
+        title: "Export Microfiber Floral Quilted King Size Bedsheet Set (3-Pc)",
+        category: "BEDSHEETS",
+        categoryName: "Bed Linen",
+        retail: 1650,
+        original: 2500,
+        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=700&q=80",
+        tag: "EXPORT LINEN",
+        specs: [
+          "Sheet Size: 95 x 100 Inches King Flat Sheet",
+          "Pillow Covers: 2 Matching Large Quilted Envelope Covers (19x29 In)",
+          "Material: Super-soft peached microfiber weave",
+          "Anti-wrinkle, color-fast, and durable machine washable"
+        ]
+      },
+      {
+        id: "ts-108",
+        title: "Premium 100% Pure Cotton Satin Stripe Hotel Bedsheet Set (3-Pc)",
+        category: "BEDSHEETS",
+        categoryName: "Bed Linen",
+        retail: 1999,
+        original: 2950,
+        image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=700&q=80",
+        tag: "HOTEL LUXURY",
+        specs: [
+          "King Sheet (95x105 Inches) + 2 Standard Pillow Shams",
+          "300 Thread Count fine cotton satin stripe weave",
+          "Ultra-durable hotel grade linen with smooth lustrous sheen"
+        ]
+      }
+    ];
+ 
+    // ACTIVE PRODUCTS STATE (Defaults to DUMMY_PRODUCTS until live DB responds)
+    let PRODUCTS = [...DUMMY_PRODUCTS];
+    let isLiveCatalogActive = false;
+    let currentCategory = "ALL";
+    let currentSelectedProduct = null;
+
+    // AUTO-FETCH LIVE PRODUCTS FROM CPANEL DATABASE
+    async function loadLiveCatalog() {
+      try {
+        const res = await fetch("/api/products.php");
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        // OPTION A: If at least 1 real product is fetched from WhatsApp Bot, DUMMY PRODUCTS ARE COMPLETELY REMOVED!
+        if (data.status === "success" && data.products && data.products.length > 0) {
+          PRODUCTS = data.products;
+          isLiveCatalogActive = true;
+          console.log(`✅ Live WhatsApp Catalog Active: ${PRODUCTS.length} live products loaded. Dummy items removed.`);
+          filterCategory(currentCategory);
+        }
+      } catch (err) {
+        // Quiet fallback to dummy catalog if offline
+        console.log("Serving backup catalog:", err);
+      }
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts(items = PRODUCTS) {
+      const grid = document.getElementById("productGrid");
+      if (!grid) return;
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">No products found matching your search.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(p => `
+        <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer" onclick="openProductModal('${p.id}')">
+          <div>
+            <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
+              <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              
+              <span class="absolute top-3 left-3 bg-slate-950 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow">
+                ${p.tag}
+              </span>
+
+              <span class="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-slate-900 text-[10px] font-bold px-2 py-1 rounded-md shadow-sm border border-slate-200">
+                2-5 Days Delivery
+              </span>
+            </div>
+
+            <div class="p-5">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400">${p.categoryName}</div>
+              <h3 class="font-extrabold text-slate-900 text-sm line-clamp-2 leading-snug mt-1">${p.title}</h3>
+              
+              <div class="flex items-baseline space-x-2.5 mt-3">
+                <span class="text-xl font-black text-slate-950">Rs. ${p.retail.toLocaleString()}</span>
+                <span class="text-xs line-through text-slate-400 font-semibold">Rs. ${p.original.toLocaleString()}</span>
+              </div>
+
+              <!-- Urgent Stock Progress Bar -->
+              <div class="mt-3 pt-2.5 border-t border-slate-100">
+                <div class="flex justify-between items-center text-[10px] text-amber-900 font-bold mb-1">
+                  <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-fire-flame-curved text-amber-600 animate-pulse"></i> Only ${(p.title.length % 4) + 2} suits left
+                  </span>
+                  <span class="text-[9px] text-slate-400">Wholesale Batch</span>
+                </div>
+                <div class="w-full bg-amber-100/70 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-full rounded-full" style="width: ${(p.title.length % 35) + 55}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5 pt-0">
+            <button onclick="event.stopPropagation(); openCheckoutModal('${p.id}')" class="w-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold py-3 rounded-2xl shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>ORDER NOW</span>
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // PRODUCT MODAL
+    function openProductModal(prodId) {
+      const prod = PRODUCTS.find(p => p.id === prodId);
+      if (!prod) return;
+
+      document.getElementById("detailImg").src = prod.image;
+      document.getElementById("detailTag").innerText = prod.tag;
+      document.getElementById("detailCategory").innerText = prod.categoryName;
+      document.getElementById("detailTitle").innerText = prod.title;
+      document.getElementById("detailPrice").innerText = `Rs. ${prod.retail.toLocaleString()}`;
+      document.getElementById("detailOriginal").innerText = `Rs. ${prod.original.toLocaleString()}`;
+
+      const specsList = document.getElementById("detailSpecs");
+      specsList.innerHTML = prod.specs.map(s => `<li>${s}</li>`).join("");
+
+      const orderBtn = document.getElementById("detailOrderBtn");
+      orderBtn.onclick = function() {
+        closeProductModal();
+        openCheckoutModal(prod.id);
+      };
+
+      document.getElementById("productDetailModal").classList.remove("hidden");
+    }
+
+    function closeProductModal() {
+      document.getElementById("productDetailModal").classList.add("hidden");
+    }
+
+    // CATEGORY FILTER
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-pill").forEach(btn => {
+        if (btn.getAttribute("data-category") === cat) {
+          btn.className = "cat-pill bg-white text-slate-950 shadow-sm px-4 py-2 rounded-xl transition";
+        } else {
+          btn.className = "cat-pill text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition";
+        }
+      });
+
+      const filtered = cat === "ALL" ? PRODUCTS : PRODUCTS.filter(p => p.category === cat);
+      renderProducts(filtered);
+
+      const titleMap = {
+        ALL: "All Clothing & Fabric Inventory",
+        LAWN_3PC: "Ladies Lawn 3-Piece Collection",
+        LAWN_2PC: "Ladies Lawn 2-Piece Collection",
+        GENTS: "Gents Boski & Cotton Fabrics",
+        BEDSHEETS: "Export Quality Bed Linen"
+      };
+      document.getElementById("catalogTitle").innerText = titleMap[cat] || "Catalog";
+    }
+
+    function filterAndShowCategory(cat) {
+      showPage('home');
+      filterCategory(cat);
+      const catalogEl = document.getElementById("catalog");
+      if (catalogEl) catalogEl.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // SEARCH
+    function handleSearch(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) {
+        filterCategory(currentCategory);
+        return;
+      }
+      const filtered = PRODUCTS.filter(p => 
+        p.title.toLowerCase().includes(q) || 
+        p.categoryName.toLowerCase().includes(q)
+      );
+      renderProducts(filtered);
+    }
+
+    // NAVIGATION
+    function showPage(pageId) {
+      document.getElementById("page-home").classList.add("hidden");
+      document.getElementById("page-track").classList.add("hidden");
+
+      const target = document.getElementById(`page-${pageId}`);
+      if (target) target.classList.remove("hidden");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // LIVE CLOUD ORDER TRACKING FROM GOOGLE SHEETS
+    async function executeTrackOrder() {
+      const val = document.getElementById("trackInput").value.trim();
+      const resultBox = document.getElementById("trackResultBox");
+      
+      if (!val) {
+        alert("Please enter your Order Reference ID or Phone number.");
+        return;
+      }
+
+      resultBox.classList.remove("hidden");
+      resultBox.innerHTML = `
+        <div class="text-center py-8 text-slate-500 text-xs">
+          <i class="fa-solid fa-circle-notch fa-spin text-xl text-slate-900 mb-2"></i>
+          <div>Connecting to TRY SASTA database...</div>
+        </div>
+      `;
+
+      try {
+        // Query live Google Sheet database
+        const res = await fetch(`${GOOGLE_SHEETS_URL}?query=${encodeURIComponent(val)}`);
+        const data = await res.json();
+
+        if (data.status === "found" && data.order) {
+          const o = data.order;
+          const rawStatus = (o.orderStatus || "PENDING").toString().toLowerCase().trim();
+
+          const isDelivered = rawStatus.includes("deliver"); 
+          const isShipped = isDelivered || rawStatus.includes("transit") || rawStatus.includes("ship") || rawStatus.includes("dispatch");
+          const isConfirmed = isShipped || rawStatus.includes("confirm") || rawStatus.includes("process");
+
+          let progressPercent = 33;
+          let activeBadgeText = "PENDING";
+          let badgeClass = "bg-amber-100 text-amber-800 border-amber-300";
+
+          if (isDelivered) {
+            progressPercent = 100;
+            activeBadgeText = "DELIVERED";
+            badgeClass = "bg-emerald-100 text-emerald-800 border-emerald-300";
+          } else if (isShipped) {
+            progressPercent = 66;
+            activeBadgeText = "IN TRANSIT";
+            badgeClass = "bg-purple-100 text-purple-800 border-purple-300";
+          } else if (isConfirmed) {
+            progressPercent = 50; // Halfway between Booked and In Transit
+            activeBadgeText = rawStatus.includes("process") ? "PROCESSING" : "CONFIRMED";
+            badgeClass = "bg-blue-100 text-blue-800 border-blue-300";
+          }
+
+          resultBox.innerHTML = `
+            <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-5">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Verified Order</span>
+                  <h4 class="text-base font-black text-slate-900">${o.orderRef}</h4>
+                </div>
+                <span class="text-xs font-black px-3.5 py-1.5 rounded-full border ${badgeClass}">
+                  ${activeBadgeText}
+                </span>
+              </div>
+
+              <!-- Visual Progress Timeline -->
+              <div class="py-2">
+                <div class="flex items-center justify-between text-[11px] font-bold mb-2">
+                  <span class="text-emerald-700 flex items-center gap-1 font-black">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i> Booked
+                  </span>
+                  <span class="${isShipped ? 'text-emerald-700 font-black' : 'text-slate-400'} flex items-center gap-1">
+                    <i class="fa-solid ${isShipped ? 'fa-circle-check text-emerald-600' : 'fa-truck-fast'}"></i> In Transit
+                  </span>
+                  <span class="${isDelivered ? 'text-emerald-700 font-black' : 'text-slate-400'} flex items-center gap-1">
+                    <i class="fa-solid ${isDelivered ? 'fa-circle-check text-emerald-600' : 'fa-house-chimney'}"></i> Delivered
+                  </span>
+                </div>
+                <!-- Robust explicit width bar -->
+                <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden p-0.5 border border-slate-300">
+                  <div style="width: ${progressPercent}%;" class="h-full rounded-full transition-all duration-700 ${isDelivered ? 'bg-emerald-600' : isShipped ? 'bg-emerald-600' : 'bg-slate-900'}"></div>
+                </div>
+              </div>
+
+              <!-- Details Grid -->
+              <div class="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl text-xs text-slate-600">
+                <div><strong>Customer:</strong><br/> ${o.customerName}</div>
+                <div><strong>Destination City:</strong><br/> ${o.city}</div>
+                <div><strong>Item Booked:</strong><br/> ${o.itemTitle}</div>
+                <div><strong>Total Payable (COD):</strong><br/> <span class="text-slate-950 font-bold">Rs. ${parseFloat(o.totalAmount).toLocaleString()}</span></div>
+              </div>
+
+              <div class="pt-2 text-[11px] text-slate-500 flex items-center justify-between border-t border-slate-100">
+                <span>Courier Transit: <strong>2-5 Working Days</strong></span>
+                <a href="https://wa.me/923056387607?text=${encodeURIComponent('Hello TRY SASTA, inquiring about status of my order ' + o.orderRef)}" target="_blank" class="text-emerald-700 font-bold hover:underline">
+                  <i class="fa-brands fa-whatsapp"></i> Chat Support
+                </a>
+              </div>
+            </div>
+          `;
+        } else {
+          // Fallback to local storage if not found in cloud
+          let orders = JSON.parse(localStorage.getItem("trysasta_orders") || "[]");
+          const localFound = orders.find(x => x.orderRef.toLowerCase().includes(val.toLowerCase()) || x.phone.includes(val));
+          
+          if (localFound) {
+            resultBox.innerHTML = `
+              <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl text-xs space-y-2">
+                <div class="flex items-center justify-between font-bold text-slate-900">
+                  <span>Order: ${localFound.orderRef}</span>
+                  <span class="bg-slate-950 text-white px-2 py-0.5 rounded text-[10px]">${localFound.status}</span>
+                </div>
+                <div>Customer: ${localFound.customerName} | ${localFound.city}</div>
+                <div>Item: ${localFound.itemTitle}</div>
+                <div class="font-bold text-slate-950">Total COD: Rs. ${localFound.totalAmount}</div>
+              </div>
+            `;
+          } else {
+            resultBox.innerHTML = `
+              <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl text-center text-xs text-slate-600">
+                <i class="fa-solid fa-circle-exclamation text-amber-500 text-2xl mb-2"></i>
+                <div class="font-bold text-slate-900 mb-1">No matching order found</div>
+                <p>Please double-check your Order Reference ID (e.g., TS-123456) or Contact Number. If you recently placed this order, it will appear shortly.</p>
+                <div class="mt-4">
+                  <a href="https://wa.me/923056387607" target="_blank" class="inline-flex items-center gap-1.5 bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp Helpdesk
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+        }
+      } catch (e) {
+        resultBox.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl text-xs text-slate-600 text-center">
+            Tracking server busy. Please contact WhatsApp helpline: <strong>0305-6387607</strong>.
+          </div>
+        `;
+      }
+    }
+
+    // CHECKOUT MODAL
+    function openCheckoutModal(prodId) {
+      currentSelectedProduct = PRODUCTS.find(p => p.id === prodId);
+      if (!currentSelectedProduct) return;
+
+      const preview = document.getElementById("checkoutProductPreview");
+      preview.innerHTML = `
+        <img src="${currentSelectedProduct.image}" class="w-16 h-16 rounded-xl object-cover" />
+        <div class="flex-1 min-w-0">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${currentSelectedProduct.categoryName}</span>
+          <h4 class="text-xs font-extrabold text-slate-900 truncate">${currentSelectedProduct.title}</h4>
+          <div class="text-xs text-slate-900 font-black mt-0.5">Rs. ${currentSelectedProduct.retail.toLocaleString()}</div>
+        </div>
+      `;
+
+      const suitPrice = currentSelectedProduct.retail;
+      const courierCharge = 200;
+      const rawTotal = suitPrice + courierCharge;
+      const finalPayable = Math.max(0, rawTotal - luckyDiscountAmount);
+
+      // Populate itemized rows
+      const itemPriceEl = document.getElementById("checkoutItemPriceDisplay");
+      const courierEl = document.getElementById("checkoutCourierDisplay");
+      const discountRow = document.getElementById("checkoutDiscountRow");
+      const discountDeductionEl = document.getElementById("checkoutDiscountDeduction");
+      const totalDisplay = document.getElementById("checkoutTotalDisplay");
+
+      if (itemPriceEl) itemPriceEl.innerText = `Rs. ${suitPrice.toLocaleString()}`;
+      if (courierEl) courierEl.innerText = `Rs. ${courierCharge.toLocaleString()}`;
+
+      const couponBox = document.getElementById("couponAppliedBox");
+      if (luckyDiscountAmount > 0) {
+        if (couponBox) couponBox.classList.remove("hidden");
+        if (discountRow) discountRow.classList.remove("hidden");
+        if (discountDeductionEl) discountDeductionEl.innerText = `- Rs. ${luckyDiscountAmount.toLocaleString()}`;
+      } else {
+        if (couponBox) couponBox.classList.add("hidden");
+        if (discountRow) discountRow.classList.add("hidden");
+      }
+
+      if (totalDisplay) totalDisplay.innerText = `Rs. ${finalPayable.toLocaleString()}`;
+      document.getElementById("checkoutModal").classList.remove("hidden");
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById("checkoutModal").classList.add("hidden");
+    }
+
+    // GOOGLE SHEETS LIVE ORDER WEBHOOK URL
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyXps_g074S8VJHr3RwKQVGzPE7VFSvxbb4c3x-paQ1k9zv2O4QdLPaTtj2o0hcoPAYhg/exec";
+
+    function handlePlaceOrder(e) {
+      e.preventDefault();
+      const orderRef = "TS-" + Math.floor(100000 + Math.random() * 900000);
+      const name = document.getElementById("custName").value;
+      const phone = document.getElementById("custPhone").value;
+      const city = document.getElementById("custCity").value;
+      const area = document.getElementById("custArea").value;
+      const size = document.getElementById("custSize").value;
+      const address = document.getElementById("custAddress").value;
+      const rawTotal = currentSelectedProduct.retail + 200;
+      const totalAmount = Math.max(0, rawTotal - luckyDiscountAmount);
+
+      const newOrder = {
+        orderRef: orderRef,
+        date: new Date().toLocaleString(),
+        customerName: name,
+        phone: phone,
+        city: city,
+        area: area,
+        address: address,
+        itemTitle: currentSelectedProduct.title,
+        size: size,
+        totalAmount: totalAmount,
+        status: "PENDING"
+      };
+
+      // 1. Send live order directly to your Google Sheet!
+      try {
+        fetch(GOOGLE_SHEETS_URL, {
+          method: "POST",
+          mode: "no-cors", // Google Apps Script requires no-cors for seamless client-side posting
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newOrder)
+        });
+      } catch (err) {
+        console.error("Google Sheets sync:", err);
+      }
+
+      // 2. Also keep local copy
+      let existingOrders = JSON.parse(localStorage.getItem("trysasta_orders") || "[]");
+      existingOrders.unshift(newOrder);
+      localStorage.setItem("trysasta_orders", JSON.stringify(existingOrders));
+
+      closeCheckoutModal();
+
+      document.getElementById("successOrderRef").innerText = orderRef;
+      document.getElementById("successName").innerText = name;
+      document.getElementById("successCity").innerText = city;
+      document.getElementById("successAmount").innerText = `Rs. ${totalAmount.toLocaleString()} (COD)`;
+      document.getElementById("successModal").classList.remove("hidden");
+    }
+
+    function closeSuccessModal() {
+      document.getElementById("successModal").classList.add("hidden");
+    }
+
+    // ==============================================================
+    // HERO AUTO ROTATING SLIDER
+    // ==============================================================
+    let currentHeroSlideIndex = 0;
+    let heroSliderTimer = null;
+
+    function getHeroSlides() {
+      // Use first 5 products from catalog
+      return PRODUCTS.slice(0, 5);
+    }
+
+    function renderHeroSlide(index) {
+      const slides = getHeroSlides();
+      if (!slides || slides.length === 0) return;
+      currentHeroSlideIndex = (index + slides.length) % slides.length;
+      const s = slides[currentHeroSlideIndex];
+
+      const imgEl = document.getElementById("heroSlideImg");
+      const badgeEl = document.getElementById("heroSlideBadge");
+      const catEl = document.getElementById("heroSlideCat");
+      const titleEl = document.getElementById("heroSlideTitle");
+      const priceEl = document.getElementById("heroSlidePrice");
+      const origEl = document.getElementById("heroSlideOriginal");
+      const containerEl = document.getElementById("heroSliderContainer");
+
+      if (imgEl) imgEl.src = s.image;
+      if (badgeEl) badgeEl.innerText = s.tag || "FEATURED";
+      if (catEl) catEl.innerText = (s.categoryName || "LADIES APPAREL").toUpperCase();
+      if (titleEl) titleEl.innerText = s.title;
+      if (priceEl) priceEl.innerText = `Rs. ${s.retail.toLocaleString()}`;
+      if (origEl) origEl.innerText = `Rs. ${s.original.toLocaleString()}`;
+
+      if (containerEl) {
+        containerEl.onclick = () => openProductModal(s.id);
+      }
+
+      // Update dots
+      const dotsEl = document.getElementById("heroSliderDots");
+      if (dotsEl) {
+        dotsEl.innerHTML = slides.map((_, i) => `
+          <span onclick="event.stopPropagation(); renderHeroSlide(${i}); resetHeroTimer();" class="cursor-pointer transition-all duration-300 ${i === currentHeroSlideIndex ? 'w-6 h-1.5 rounded-full bg-stone-900' : 'w-1.5 h-1.5 rounded-full bg-stone-300 hover:bg-stone-500'}"></span>
+        `).join("");
+      }
+    }
+
+    function nextHeroSlide() {
+      renderHeroSlide(currentHeroSlideIndex + 1);
+      resetHeroTimer();
+    }
+
+    function prevHeroSlide() {
+      renderHeroSlide(currentHeroSlideIndex - 1);
+      resetHeroTimer();
+    }
+
+    function resetHeroTimer() {
+      if (heroSliderTimer) clearInterval(heroSliderTimer);
+      heroSliderTimer = setInterval(() => {
+        renderHeroSlide(currentHeroSlideIndex + 1);
+      }, 4500); // Rotate every 4.5 seconds
+    }
+
+    // ==============================================================
+    // LIVE SOCIAL PROOF POPUPS ("Someone from Lahore just bought...")
+    // ==============================================================
+    const RECENT_BUYERS = [
+      { name: "Ayesha K.", city: "Lahore", time: "2 min ago" },
+      { name: "Fatima Noor", city: "Karachi", time: "Just now" },
+      { name: "Zainab B.", city: "Islamabad", time: "5 min ago" },
+      { name: "Mariam S.", city: "Rawalpindi", time: "1 min ago" },
+      { name: "Hira Tariq", city: "Faisalabad", time: "8 min ago" },
+      { name: "Sana Malik", city: "Multan", time: "4 min ago" },
+      { name: "Dr. Alishba", city: "Peshawar", time: "Just now" },
+      { name: "Sadia Q.", city: "Sialkot", time: "3 min ago" }
+    ];
+
+    let lastSocialProofProduct = null;
+
+    function triggerSocialProof() {
+      const popup = document.getElementById("socialProofPopup");
+      if (!popup || PRODUCTS.length === 0) return;
+
+      const randomBuyer = RECENT_BUYERS[Math.floor(Math.random() * RECENT_BUYERS.length)];
+      const randomProd = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+      lastSocialProofProduct = randomProd;
+
+      document.getElementById("spImg").src = randomProd.image;
+      document.getElementById("spCustomer").innerText = `${randomBuyer.name} from ${randomBuyer.city}`;
+      document.getElementById("spProduct").innerText = `Bought ${randomProd.title}`;
+      document.getElementById("spTime").innerText = randomBuyer.time;
+
+      popup.classList.remove("hidden");
+      popup.classList.add("social-proof-enter");
+
+      // Hide after 6 seconds
+      setTimeout(() => {
+        popup.classList.add("hidden");
+        popup.classList.remove("social-proof-enter");
+      }, 6000);
+    }
+
+    function showRandomProductDetail() {
+      if (lastSocialProofProduct) {
+        openProductModal(lastSocialProofProduct.id);
+      }
+    }
+
+    function startSocialProofCycle() {
+      // First popup after 4 seconds
+      setTimeout(triggerSocialProof, 4000);
+      // Then every 25 seconds
+      setInterval(triggerSocialProof, 25000);
+    }
+
+    // ==============================================================
+    // SPIN THE WHEEL & LUCKY COUPON GAME ENGINE
+    // ==============================================================
+    let luckyDiscountAmount = 0;
+    let hasSpunWheel = false;
+    let currentWheelRotation = 0;
+
+    const SPIN_PRIZES = [
+      { text: "Rs. 150 OFF", discount: 150, code: "LUCKY150", angle: 30 },
+      { text: "FREE DELIVERY", discount: 200, code: "FREESHIP", angle: 90 },
+      { text: "Rs. 100 OFF", discount: 100, code: "LUCKY100", angle: 150 },
+      { text: "Rs. 200 OFF", discount: 200, code: "MEGA200", angle: 210 },
+      { text: "Rs. 150 OFF", discount: 150, code: "TS150", angle: 270 },
+      { text: "FREE DELIVERY", discount: 200, code: "EXPRESSFREE", angle: 330 }
+    ];
+
+    function openSpinWheelModal() {
+      const modal = document.getElementById("spinWheelModal");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeSpinWheelModal() {
+      const modal = document.getElementById("spinWheelModal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function executeSpin() {
+      if (hasSpunWheel) {
+        alert("You have already claimed your lucky discount coupon! It will automatically apply at checkout.");
+        closeSpinWheelModal();
+        return;
+      }
+
+      const disc = document.getElementById("wheelDisc");
+      const btn = document.getElementById("spinBtn");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Spinning...`;
+
+      // Randomly pick a winning prize
+      const winningIndex = Math.floor(Math.random() * SPIN_PRIZES.length);
+      const prize = SPIN_PRIZES[winningIndex];
+
+      // Spin minimum 5 full rotations + landing angle
+      const extraRotations = 360 * 5;
+      currentWheelRotation += extraRotations + (360 - prize.angle);
+      disc.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+      // After spin animation (4 seconds)
+      setTimeout(() => {
+        hasSpunWheel = true;
+        luckyDiscountAmount = prize.discount;
+
+        document.getElementById("spinResultTitle").innerText = `🎉 You Won ${prize.text}!`;
+        document.getElementById("spinCouponCode").innerText = prize.code;
+        document.getElementById("couponDiscountLabel").innerText = `- Rs. ${prize.discount}`;
+        document.getElementById("couponCodeLabel").innerText = `COUPON [${prize.code}] APPLIED`;
+        document.getElementById("spinResultBox").classList.remove("hidden");
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>CLAIM & CONTINUE SHOPPING</span>`;
+        btn.onclick = () => {
+          closeSpinWheelModal();
+          // Scroll smoothly to catalog
+          const catEl = document.getElementById("catalog");
+          if (catEl) catEl.scrollIntoView({ behavior: "smooth" });
+        };
+      }, 4000);
+    }
+
+    // Auto-prompt Spin Wheel after 12 seconds for visitors
+    setTimeout(() => {
+      if (!hasSpunWheel && !localStorage.getItem("trysasta_wheel_shown")) {
+        openSpinWheelModal();
+        localStorage.setItem("trysasta_wheel_shown", "true");
+      }
+    }, 12000);
+
+    // Close modals with Escape key
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        closeCheckoutModal();
+        closeProductModal();
+        closeSuccessModal();
+        closeSpinWheelModal();
+      }
+    });
+
+    // INITIAL RENDER & DYNAMIC LIVE CATALOG FETCH
+    renderProducts();
+    loadLiveCatalog();
+    renderHeroSlide(0);
+    resetHeroTimer();
+    startSocialProofCycle();
+  </script>
+</body>
+</html>
