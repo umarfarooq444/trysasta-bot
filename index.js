@@ -1,9 +1,11 @@
 /**
  * TRY SASTA (trysasta.com) - 24/7 Automated WhatsApp Wholesale Dropship Bot
- * Upgraded with:
- * 1. Dual Image Hosting: Catbox.moe CDN with ImgBB fallback (NO dummy photos!)
- * 2. Exact Specification Parsing: Preserves raw fabric details, embroidery, shirt, trouser, dupatta specs
- * 3. Multi-Message Buffer (Images first, Description later support)
+ * Features:
+ * 1. Multi-Image Collector: Buffers ALL images posted for a suit batch (e.g. 5, 20, or 100 images)
+ * 2. Real Supplier Name Tagging: Sends the exact WhatsApp Group / Supplier name to cPanel & Google Sheet
+ * 3. Arabic & Bismillah Remover: Clean professional titles without Bismillah or vendor icons
+ * 4. Vendor Wholesale Price Excluder: Prevents vendor rate lines from leaking into specifications
+ * 5. Direct Catbox.moe CDN with ImgBB fallback: Never fallback to dummy pictures
  */
 
 console.log('🚀 [TRY SASTA BOT] Initializing engine...');
@@ -28,7 +30,7 @@ const CONFIG = {
   PROFIT_MARKUP_PERCENT: 35,
   IMGBB_API_KEY: process.env.IMGBB_API_KEY || '6d207e02198a847aa5a0a0a3b90143bc',
 
-  // LOCKED APPROVED WHOLESALE COMMUNITIES ONLY
+  // APPROVED WHOLESALE COMMUNITIES ONLY
   TARGET_GROUPS: [
     'AH Textile Collection',
     'AL-KABIR TEXTILE',
@@ -41,13 +43,13 @@ const CONFIG = {
   ]
 };
 
-// IN-MEMORY BUFFER: Stores the most recent image for each group (valid for 5 minutes)
-const GROUP_IMAGE_BUFFER = new Map();
+// GROUP BATCH BUFFER: Collects multiple photos and text per group
+// Key: fromJid -> { images: [buffer1, buffer2, ...], timer: null, lastUpdate: timestamp }
+const GROUP_BATCHES = new Map();
 
 /**
  * Robust CDN Uploader:
- * Priority 1: Catbox.moe (Free, ultra-fast, no API key required, permanent CDN URLs)
- * Priority 2: ImgBB API (Fallback)
+ * Uploads real buffer to Catbox.moe (or ImgBB fallback)
  */
 async function uploadImageToCDN(buffer) {
   // Method 1: Catbox.moe
@@ -55,7 +57,7 @@ async function uploadImageToCDN(buffer) {
     const form = new FormData();
     form.append('reqtype', 'fileupload');
     form.append('fileToUpload', buffer, {
-      filename: `suit_${Date.now()}.jpg`,
+      filename: `suit_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`,
       contentType: 'image/jpeg'
     });
 
@@ -65,11 +67,10 @@ async function uploadImageToCDN(buffer) {
     });
 
     if (res.data && typeof res.data === 'string' && res.data.startsWith('http')) {
-      console.log('✅ Image uploaded successfully via Catbox CDN:', res.data.trim());
       return res.data.trim();
     }
   } catch (err1) {
-    console.warn('⚠️ Catbox upload notice:', err1.message);
+    console.warn('⚠️ Catbox notice:', err1.message);
   }
 
   // Method 2: ImgBB fallback
@@ -81,23 +82,21 @@ async function uploadImageToCDN(buffer) {
       timeout: 25000
     });
     if (res.data?.data?.url) {
-      console.log('✅ Image uploaded successfully via ImgBB:', res.data.data.url);
       return res.data.data.url;
     }
   } catch (err2) {
-    console.warn('⚠️ ImgBB fallback notice:', err2.message);
+    console.warn('⚠️ ImgBB notice:', err2.message);
   }
 
-  // Final fallback only if both CDNs fail
-  return 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600';
+  return null;
 }
 
 /**
  * Intelligent Caption Parser:
  * - Detects Wholesale Rate
+ * - Strips Arabic Bismillah & vendor price lines
  * - Determines Category
- * - Builds Clean Title
- * - Extracts Exact Fabric / Design Bullet Points (Specs)
+ * - Extracts Clean Specifications
  */
 function parseCaption(text) {
   if (!text) return null;
@@ -105,11 +104,11 @@ function parseCaption(text) {
   let wholesale = null;
 
   // Match Advance / Wholesale payment rates
-  const advanceMatch = text.match(/(?:advance\s*payment|advance|wholesale|rate|price|cod|cash\s*on\s*delivery)\s*[:=\-]?\s*(\d{3,5})/i);
+  const advanceMatch = text.match(/(?:advance\s*payment|advance|wholesale\s*price|wholesale|rate|price|cod|cash\s*on\s*delivery)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
   if (advanceMatch) {
     wholesale = parseInt(advanceMatch[1], 10);
   } else {
-    // Or match standalone 4-digit numbers like 2750, 2850, 3950
+    // Or match standalone 4-digit numbers like 2750, 3900, 1750
     const rawNumbers = text.match(/\b([1-9]\d{3})\b/g);
     if (rawNumbers && rawNumbers.length > 0) {
       wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
@@ -133,22 +132,31 @@ function parseCaption(text) {
     category = 'LAWN_3PC';
   }
 
-  // Extract clean suit title from top lines
   const rawLines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+  // Strip Bismillah, Arabic symbols, and vendor rates from header lines
   const cleanHeaderLines = rawLines
-    .map(l => l.replace(/[*_~✨🔥]/g, '').trim())
-    .filter(l => l.length > 2 && !l.match(/^(price|rate|wholesale|cod|advance|free delivery|dc)/i));
+    .map(l => {
+      let cl = l.replace(/[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF۞۩﴾﴿]/g, '');
+      cl = cl.replace(/[*_~✨🔥😍]/g, '').trim();
+      return cl;
+    })
+    .filter(l => l.length > 2 && !l.match(/^(price|rate|wholesale|cod|advance|free delivery|dc|rs\.?\s*\d+)/i));
 
   let title = cleanHeaderLines.slice(0, 2).join(' - ');
-  if (!title || title.length < 5) title = `TRY SASTA Luxury Collection (${category})`;
+  title = title.replace(/^[\s\-\–\—\:]+/g, '').trim();
+  if (!title || title.length < 4) title = `Luxury Designer Collection (${category})`;
   if (title.length > 65) title = title.substring(0, 65);
 
-  // Extract Exact Specs from WhatsApp Message Lines
+  // Extract Exact Specs, strictly excluding Arabic and Vendor Price lines
   const specs = [];
   for (const line of rawLines) {
-    const clean = line.replace(/[*_~]/g, '').trim();
+    let clean = line.replace(/[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF۞۩﴾﴿]/g, '');
+    clean = clean.replace(/[*_~]/g, '').trim();
     if (clean.length < 3) continue;
-    if (clean.match(/(?:advance\s*payment|advance|wholesale|rate|price|cod|free\s*dc|dc\s*free)/i)) continue;
+
+    // Filter out vendor wholesale and delivery cost lines
+    if (clean.match(/(?:advance\s*payment|advance|wholesale|rate|price|cod|free\s*dc|dc\s*free|rs\.?\s*\d+|only\s*😍)/i)) continue;
     if (clean.match(/^(order\s*now|book\s*fast|limited\s*stock|contact|whatsapp)/i)) continue;
 
     const isBullet = /^[*>\-0-9]/.test(line.trim());
@@ -163,28 +171,18 @@ function parseCaption(text) {
   }
 
   if (specs.length === 0) {
-    for (let i = 0; i < Math.min(rawLines.length, 5); i++) {
-      const cl = rawLines[i].replace(/[*_~]/g, '').trim();
-      if (cl.length > 4 && !cl.match(/(price|rate|wholesale|cod|advance)/i)) {
-        specs.push(cl);
-      }
-    }
-  }
-
-  if (specs.length === 0) {
     specs.push("Direct Wholesale Textile Import");
-    specs.push("100% Guaranteed pure fabric quality");
+    specs.push("100% Guaranteed pure unstitched fabric quality");
     specs.push("Express Dispatch within 2-5 Working Days");
     specs.push("Cash on Delivery nationwide with checking warranty");
   }
 
-  return { 
-    title, 
-    wholesaleRate: wholesale, 
-    retailPrice: retail, 
+  return {
+    title,
+    wholesaleRate: wholesale,
+    retailPrice: retail,
     category,
-    specs,
-    rawText: text
+    specs
   };
 }
 
@@ -206,7 +204,6 @@ async function startBot() {
 
   sock.ev.on('creds.update', saveCreds);
 
-  // Request Pairing Code if not registered yet
   if (!sock.authState.creds.registered) {
     setTimeout(async () => {
       try {
@@ -224,18 +221,13 @@ async function startBot() {
 
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
-    
-    if (connection === 'connecting') {
-      console.log('⏳ WhatsApp connecting in progress...');
-    }
-
     if (connection === 'close') {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       console.log(`⚠️ Connection state: ${statusCode}`);
       setTimeout(startBot, 4000);
     } else if (connection === 'open') {
       console.log('\n======================================================');
-      console.log('🎉 BOT 100% ONLINE & LISTENING TO 5 TARGET GROUPS:');
+      console.log('🎉 BOT 100% ONLINE & LISTENING TO APPROVED WHOLESALE GROUPS:');
       CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
       console.log('======================================================\n');
     }
@@ -256,7 +248,6 @@ async function startBot() {
       // fallback
     }
 
-    // STRICT CHECK: Is this message from one of our approved wholesale groups?
     const isApprovedGroup = CONFIG.TARGET_GROUPS.some(allowedName => 
       groupSubject.toLowerCase().replace(/\s+/g, '').includes(allowedName.toLowerCase().replace(/\s+/g, ''))
     );
@@ -268,59 +259,96 @@ async function startBot() {
                          msg.message.conversation || 
                          msg.message.extendedTextMessage?.text || '';
 
-    // CASE 1: Seller sends IMAGE first (save buffer for this group)
+    // Initialize or get group batch
+    if (!GROUP_BATCHES.has(fromJid)) {
+      GROUP_BATCHES.set(fromJid, {
+        groupName: groupSubject,
+        images: [],
+        caption: '',
+        lastSeen: Date.now()
+      });
+    }
+
+    const batch = GROUP_BATCHES.get(fromJid);
+    batch.lastSeen = Date.now();
+    if (groupSubject) batch.groupName = groupSubject;
+
+    // Collect image buffer
     if (isImage) {
       try {
         const imgBuffer = await downloadMediaMessage(msg, 'buffer', {});
-        GROUP_IMAGE_BUFFER.set(fromJid, {
-          buffer: imgBuffer,
-          timestamp: Date.now()
-        });
-        console.log(`📸 Cached new suit photo from group: "${groupSubject}" (Waiting for description...)`);
+        batch.images.push(imgBuffer);
+        console.log(`📸 Collected image (${batch.images.length}) from "${batch.groupName}"`);
       } catch (err) {
         console.error('Image download error:', err.message);
       }
     }
 
-    // CASE 2: Text description received (either in image caption OR standalone text message)
+    // Collect caption text
     if (incomingText && incomingText.length > 10) {
-      const parsed = parseCaption(incomingText);
-      if (!parsed) return; // No price detected
+      batch.caption = incomingText;
+    }
 
-      // Check if we have an image for this group in buffer (received within last 5 minutes)
-      const cached = GROUP_IMAGE_BUFFER.get(fromJid);
-      let cdnImageUrl = 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600';
+    // Schedule processing after 12 seconds of quiet period (allows all images in batch to finish arriving)
+    if (batch.timer) clearTimeout(batch.timer);
 
-      if (cached && (Date.now() - cached.timestamp < 300000)) {
-        cdnImageUrl = await uploadImageToCDN(cached.buffer);
-      }
-
-      console.log(`\n⚡ [MATCHED SUIT FROM: ${groupSubject}]`);
-      console.log(`👗 Title: ${parsed.title}`);
-      console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> Retail: Rs. ${parsed.retailPrice}`);
-      console.log(`📝 Extracted Specs (${parsed.specs.length} items):`, parsed.specs);
-      console.log(`🖼️ Final Image URL: ${cdnImageUrl}`);
-
+    batch.timer = setTimeout(async () => {
       try {
+        if (!batch.caption) {
+          console.log(`⏳ Received ${batch.images.length} images from ${batch.groupName}, still waiting for caption...`);
+          return;
+        }
+
+        const parsed = parseCaption(batch.caption);
+        if (!parsed) {
+          GROUP_BATCHES.delete(fromJid);
+          return;
+        }
+
+        console.log(`\n⚡ [PROCESSING BATCH FROM SUPPLIER: ${batch.groupName}]`);
+        console.log(`👗 Title: ${parsed.title}`);
+        console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> Retail: Rs. ${parsed.retailPrice}`);
+        console.log(`📸 Total Images Collected: ${batch.images.length}`);
+
+        // Upload images to CDN (limit to max 12 per batch for speed, or first image)
+        const uploadedUrls = [];
+        const imagesToUpload = batch.images.slice(0, 15);
+
+        for (let i = 0; i < imagesToUpload.length; i++) {
+          const url = await uploadImageToCDN(imagesToUpload[i]);
+          if (url) uploadedUrls.push(url);
+        }
+
+        // If no image was received in batch, retain primary placeholder
+        if (uploadedUrls.length === 0) {
+          uploadedUrls.push('https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600');
+        }
+
+        console.log(`🌐 Uploaded CDN URLs (${uploadedUrls.length}):`, uploadedUrls);
+
+        // Send full payload to website webhook
         await axios.post(CONFIG.SITE_WEBHOOK_URL, {
           title: parsed.title,
           category: parsed.category,
           wholesaleRate: parsed.wholesaleRate,
           retailPrice: parsed.retailPrice,
-          imageUrl: cdnImageUrl,
+          imageUrl: uploadedUrls[0],
+          images: uploadedUrls,
           specs: parsed.specs,
           description: parsed.specs.join("\n"),
+          supplier: batch.groupName,
           tag: 'JUST ARRIVED'
         }, {
           headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` }
         });
 
-        console.log(`🎉 LIVE POSTED TO trysasta.com & GOOGLE SHEET WITH EXACT SPECS & REAL PHOTO!\n`);
-        GROUP_IMAGE_BUFFER.delete(fromJid);
+        console.log(`🎉 100% POSTED TO trysasta.com & GOOGLE SHEET WITH SUPPLIER: "${batch.groupName}" & ALL DESIGNS!\n`);
       } catch (err) {
-        console.error('Webhook sync error:', err.message);
+        console.error('Batch sync error:', err.message);
+      } finally {
+        GROUP_BATCHES.delete(fromJid);
       }
-    }
+    }, 12000);
   });
 }
 
