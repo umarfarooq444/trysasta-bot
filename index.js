@@ -30,17 +30,9 @@ const CONFIG = {
   PROFIT_MARKUP_PERCENT: 35,
   IMGBB_API_KEY: process.env.IMGBB_API_KEY || '6d207e02198a847aa5a0a0a3b90143bc',
 
-  // APPROVED WHOLESALE COMMUNITIES ONLY
-  TARGET_GROUPS: [
-    'AH Textile Collection',
-    'AL-KABIR TEXTILE',
-    "Today's Fashion",
-    'kainaat textile New',
-    'kainaat',
-    'kainat',
-    'KAINAAT TEXTILE',
-    'MTN Textile'
-  ]
+  // APPROVED WHOLESALE COMMUNITIES:
+  // Empty [] means automatically accept posts from ALL WhatsApp wholesale groups!
+  TARGET_GROUPS: []
 };
 
 // GROUP BATCH BUFFER: Collects multiple photos and text per group
@@ -248,7 +240,8 @@ async function startBot() {
       // fallback
     }
 
-    const isApprovedGroup = CONFIG.TARGET_GROUPS.some(allowedName => 
+    // Whitelist check: If TARGET_GROUPS has items, check them; otherwise allow all WhatsApp groups!
+    const isApprovedGroup = (CONFIG.TARGET_GROUPS.length === 0) || CONFIG.TARGET_GROUPS.some(allowedName => 
       groupSubject.toLowerCase().replace(/\s+/g, '').includes(allowedName.toLowerCase().replace(/\s+/g, ''))
     );
 
