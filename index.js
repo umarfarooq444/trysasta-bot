@@ -1,4 +1,4 @@
-﻿/**
+/**
  * TRY SASTA (trysasta.com) - 24/7 Automated WhatsApp Wholesale Dropship Bot
  * Upgraded with:
  * 1. Dual Image Hosting: Catbox.moe CDN with ImgBB fallback (NO dummy photos!)
@@ -125,10 +125,10 @@ function parseCaption(text) {
   const lower = text.toLowerCase();
   if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear') || lower.includes('cotton fabric')) {
     category = 'GENTS';
+  } else if (lower.includes('razae') || lower.includes('bed') || lower.includes('sheet') || lower.includes('pillow')) {
+    category = 'BEDSHEETS';
   } else if (lower.includes('2pc') || lower.includes('2-pc') || lower.includes('2 piece')) {
     category = 'LAWN_2PC';
-  } else if (lower.includes('bed') || lower.includes('sheet')) {
-    category = 'BEDSHEETS';
   } else {
     category = 'LAWN_3PC';
   }
@@ -136,7 +136,7 @@ function parseCaption(text) {
   // Extract clean suit title from top lines
   const rawLines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const cleanHeaderLines = rawLines
-    .map(l => l.replace(/[*_~•✨🔥\–\—]/g, '').trim())
+    .map(l => l.replace(/[*_~✨🔥]/g, '').trim())
     .filter(l => l.length > 2 && !l.match(/^(price|rate|wholesale|cod|advance|free delivery|dc)/i));
 
   let title = cleanHeaderLines.slice(0, 2).join(' - ');
@@ -147,37 +147,33 @@ function parseCaption(text) {
   const specs = [];
   for (const line of rawLines) {
     const clean = line.replace(/[*_~]/g, '').trim();
-    // Skip empty lines or pure price/advance lines
     if (clean.length < 3) continue;
     if (clean.match(/(?:advance\s*payment|advance|wholesale|rate|price|cod|free\s*dc|dc\s*free)/i)) continue;
     if (clean.match(/^(order\s*now|book\s*fast|limited\s*stock|contact|whatsapp)/i)) continue;
 
-    // Bullet point or meaningful detail line (Fabric, Cut, Dupatta, Shirt, Trouser, Brand, etc.)
-    const isBullet = /^[•\-\*\>\–\—\d\.]/.test(line);
-    const hasFabricKeyword = /(shirt|dupatta|trouser|fabric|lawn|cotton|chiffon|embroidery|embroidered|dhanak|linen|karandi|print|digital|dyed|cut|meter|boti|front|back|sleeves|organza|silk|patch|lace)/i.test(clean);
+    const isBullet = /^[*>\-0-9]/.test(line.trim());
+    const hasFabricKeyword = /(razae|sheet|pillow|cotton|salonica|filling|gsm|shirt|dupatta|trouser|fabric|lawn|chiffon|embroidery|embroidered|dhanak|linen|karandi|print|digital|dyed|cut|meter|boti|front|back|sleeves|organza|silk|patch|lace)/i.test(clean);
 
     if (isBullet || hasFabricKeyword) {
-      const strippedBullet = clean.replace(/^[•\-\*\>\–\—\s\d\.]+/u, '').trim();
+      const strippedBullet = clean.replace(/^[*>\-\s0-9.:]+/g, '').trim();
       if (strippedBullet.length >= 3 && !specs.includes(strippedBullet)) {
         specs.push(strippedBullet);
       }
     }
   }
 
-  // If no detailed bullet lines found, retain the top non-price descriptive lines
   if (specs.length === 0) {
     for (let i = 0; i < Math.min(rawLines.length, 5); i++) {
-      const cl = rawLines[i].replace(/[*_~•\-\*\>\–\—]/g, '').trim();
+      const cl = rawLines[i].replace(/[*_~]/g, '').trim();
       if (cl.length > 4 && !cl.match(/(price|rate|wholesale|cod|advance)/i)) {
         specs.push(cl);
       }
     }
   }
 
-  // Fallback if still empty
   if (specs.length === 0) {
     specs.push("Direct Wholesale Textile Import");
-    specs.push("100% Guaranteed pure unstitched fabric cut");
+    specs.push("100% Guaranteed pure fabric quality");
     specs.push("Express Dispatch within 2-5 Working Days");
     specs.push("Cash on Delivery nationwide with checking warranty");
   }
@@ -260,7 +256,7 @@ async function startBot() {
       // fallback
     }
 
-    // STRICT CHECK: Is this message from one of our 5 approved wholesale groups?
+    // STRICT CHECK: Is this message from one of our approved wholesale groups?
     const isApprovedGroup = CONFIG.TARGET_GROUPS.some(allowedName => 
       groupSubject.toLowerCase().replace(/\s+/g, '').includes(allowedName.toLowerCase().replace(/\s+/g, ''))
     );
