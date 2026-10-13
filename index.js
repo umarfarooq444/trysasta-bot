@@ -1,11 +1,12 @@
 /**
  * TRY SASTA (trysasta.com) - 24/7 Automated WhatsApp Wholesale Dropship Bot
  * Features:
- * 1. Multi-Image Collector: Buffers ALL images posted for a suit batch (e.g. 5, 20, or 100 images)
- * 2. Real Supplier Name Tagging: Sends the exact WhatsApp Group / Supplier name to cPanel & Google Sheet
- * 3. Arabic & Bismillah Remover: Clean professional titles without Bismillah or vendor icons
- * 4. Vendor Wholesale Price Excluder: Prevents vendor rate lines from leaking into specifications
- * 5. Direct cPanel Hosting Upload with Catbox/Litterbox fallback: Never fallbacks to dummy pictures
+ * 1. Multi-Image Collector: Buffers ALL images posted for a suit batch with parallel uploads
+ * 2. Ultra-Robust Caption & Price Parser: Detects prices in ALL Pakistani wholesale formats (commas, slashes, Urdu, markdown, bold)
+ * 3. Real Supplier Name Tagging: Group name caching to avoid WhatsApp rate-limiting
+ * 4. Multi-CDN Fast Image Uploader: ImgBB + Direct Hosting + Catbox fallback (Parallel upload in 2-3s)
+ * 5. Arabic & Bismillah Remover: Clean professional titles without Bismillah or vendor icons
+ * 6. Wholesale Price Excluder: Prevents vendor rate lines from leaking into specifications
  */
 
 console.log('🚀 [TRY SASTA BOT] Initializing engine...');
@@ -35,16 +36,35 @@ const CONFIG = {
   TARGET_GROUPS: []
 };
 
-// GROUP BATCH BUFFER: Collects multiple photos and text per group
-// Key: fromJid -> { images: [buffer1, buffer2, ...], timer: null, lastUpdate: timestamp }
+// CACHES & BUFFERS
 const GROUP_BATCHES = new Map();
+const GROUP_NAME_CACHE = new Map();
 
 /**
- * Robust CDN Uploader:
- * Uploads real buffer to trysasta.com cPanel (or Catbox/Litterbox fallback)
+ * Fast & Reliable Multi-CDN Uploader:
+ * Priority 1: ImgBB (Super fast, dedicated CDN, never blocks Railway)
+ * Priority 2: Direct Upload to trysasta.com hosting
+ * Priority 3: Catbox.moe / Litterbox fallback
  */
 async function uploadImageToCDN(buffer) {
-  // Method 1: Direct Upload to trysasta.com hosting (Most reliable, never rate-limited)
+  // Method 1: ImgBB CDN (Fastest & most dependable for Cloud/Railway)
+  if (CONFIG.IMGBB_API_KEY) {
+    try {
+      const form = new FormData();
+      form.append('image', buffer.toString('base64'));
+      const res = await axios.post(`https://api.imgbb.com/1/upload?key=${CONFIG.IMGBB_API_KEY}`, form, {
+        headers: form.getHeaders(),
+        timeout: 15000
+      });
+      if (res.data && res.data.data && res.data.data.url) {
+        return res.data.data.url;
+      }
+    } catch (errImgBB) {
+      // Fall through to next method
+    }
+  }
+
+  // Method 2: Direct Upload to trysasta.com hosting
   try {
     const form = new FormData();
     form.append('image', buffer, {
@@ -57,17 +77,17 @@ async function uploadImageToCDN(buffer) {
         ...form.getHeaders(),
         'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}`
       },
-      timeout: 25000
+      timeout: 15000
     });
 
     if (res.data && res.data.status === 'success' && res.data.url) {
       return res.data.url;
     }
   } catch (errHost) {
-    console.warn('⚠️ Direct hosting upload notice:', errHost.message);
+    // Fall through to next method
   }
 
-  // Method 2: Catbox.moe CDN fallback
+  // Method 3: Catbox.moe CDN
   try {
     const form = new FormData();
     form.append('reqtype', 'fileupload');
@@ -81,73 +101,114 @@ async function uploadImageToCDN(buffer) {
         ...form.getHeaders(),
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       },
-      timeout: 25000
+      timeout: 15000
     });
 
     if (res.data && typeof res.data === 'string' && res.data.startsWith('http')) {
       return res.data.trim();
     }
-  } catch (errCatbox) {
-    console.warn('⚠️ Catbox notice:', errCatbox.message);
-  }
-
-  // Method 3: Litterbox CDN fallback
-  try {
-    const form = new FormData();
-    form.append('reqtype', 'fileupload');
-    form.append('time', '72h');
-    form.append('fileToUpload', buffer, {
-      filename: `suit_${Date.now()}.jpg`,
-      contentType: 'image/jpeg'
-    });
-    const res = await axios.post('https://litterbox.catbox.moe/resources/internals/api.php', form, {
-      headers: form.getHeaders(),
-      timeout: 25000
-    });
-    if (res.data && typeof res.data === 'string' && res.data.startsWith('http')) {
-      return res.data.trim();
-    }
-  } catch (errLit) {}
+  } catch (errCatbox) {}
 
   return null;
 }
 
 /**
- * Intelligent Caption Parser:
- * - Detects Wholesale Rate
- * - Strips Arabic Bismillah & vendor price lines
- * - Determines Category
- * - Extracts Clean Specifications
+ * Intelligent Pakistani Wholesale Caption Parser:
+ * Detects rates in all supplier formats:
+ * - *Price:* 2,150/-
+ * - Rate: 2200/=
+ * - Wholesale Rate 1950
+ * - Single 2400 / Loose 2300
+ * - Rs. 2100 / PKR 2200
+ * - 2300 fix / 2300 net / 2300+dc
+ * - ریٹ 2200 / قیمت 2200
  */
 function parseCaption(text) {
-  if (!text) return null;
+  if (!text || typeof text !== 'string') return null;
+
+  // 1. Normalize text: remove markdown formatting and standardize numbers
+  let normalized = text
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')            // invisible zero-width chars
+    .replace(/[*_~`]/g, ' ')                          // strip WhatsApp markdown (*bold*, _italic_)
+    .replace(/(\d),(\d{3})/g, '$1$2')                 // 2,150 -> 2150
+    .replace(/(\d)\s*[\/=\-]{1,2}(?:\s*only|\s*net|\s*fix)?/gi, '$1 ') // 2150/- or 2150/= -> 2150
+    .replace(/(?:ریٹ|قیمت)/g, ' price ')              // Urdu keywords
+    .replace(/ہول\s*سیل/g, ' wholesale ');
 
   let wholesale = null;
 
-  // 1. First priority: Specifically match Wholesale Price, Discounted Price, Reseller Price, or Final Price
-  const wholesaleMatch = text.match(/(?:wholesale\s*price|wholesale|discounted\s*price|discount\s*price|reseller\s*price|final\s*price|dealer\s*price|net\s*rate|cash\s*on\s*delivery|cod|advance\s*payment|advance)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
-  if (wholesaleMatch) {
-    wholesale = parseInt(wholesaleMatch[1], 10);
-  } else {
-    // 2. Remove TAG Price and Retail Price lines so they are NEVER picked up by fallback
-    const filteredText = text
+  // Priority 1: Wholesale / Reseller / Dealer / Final Rate
+  const p1Match = normalized.match(/(?:wholesale\s*rate|wholesale\s*price|wholesale|reseller\s*price|reseller|dealer\s*rate|dealer|final\s*price|final\s*rate|net\s*rate|cash\s*price|discounted\s*price|discount\s*price)\s*[:=\-]?\s*(?:rs\.?|pkr\.?)?\s*(\d{3,5})\b/i);
+  if (p1Match) {
+    wholesale = parseInt(p1Match[1], 10);
+  }
+
+  // Priority 2: Single / Loose rate (if wholesaler mentions both set and loose rate)
+  if (!wholesale) {
+    const looseMatch = normalized.match(/(?:single\s*suit|single|loose|each|per\s*suit)\s*[:=\-]?\s*(?:rs\.?|pkr\.?)?\s*(\d{3,5})\b/i);
+    if (looseMatch) {
+      wholesale = parseInt(looseMatch[1], 10);
+    }
+  }
+
+  // Priority 3: Rate / Price keywords (excluding lines with tag price or retail price)
+  if (!wholesale) {
+    const noRetailLines = normalized
       .split('\n')
-      .filter(line => !line.match(/(?:tag\s*price|retail\s*price|mrp\b|shop\s*price)/i))
+      .filter(line => !line.match(/(?:retail\s*price|tag\s*price|mrp\b|shop\s*rate)/i))
       .join('\n');
 
-    const priceMatch = filteredText.match(/(?:rate|price)\s*[:=\-]?\s*(?:rs\.?\s*)?(\d{3,5})/i);
-    if (priceMatch) {
-      wholesale = parseInt(priceMatch[1], 10);
-    } else {
-      // 3. Fallback: match 4-digit numbers in text that does NOT contain TAG Price
-      const rawNumbers = filteredText.match(/\b([1-9]\d{3})\b/g);
-      if (rawNumbers && rawNumbers.length > 0) {
-        wholesale = parseInt(rawNumbers[rawNumbers.length - 1], 10);
+    const p3Match = noRetailLines.match(/(?:rate|price|cost|amount)\s*[:=\-]?\s*(?:rs\.?|pkr\.?)?\s*(\d{3,5})\b/i);
+    if (p3Match) {
+      wholesale = parseInt(p3Match[1], 10);
+    }
+  }
+
+  // Priority 4: Explicit Currency mention (Rs. 2200, PKR 2400)
+  if (!wholesale) {
+    const curMatch = normalized.match(/(?:rs\.?|pkr\.?)\s*[:=\-]?\s*(\d{3,5})\b/i);
+    if (curMatch) {
+      const val = parseInt(curMatch[1], 10);
+      if (val >= 750) {
+        wholesale = val;
       }
     }
   }
 
-  if (!wholesale || wholesale < 800 || wholesale > 25000) return null;
+  // Priority 5: Number followed by price suffixes (2150 only, 2200 net, 2300 fix, 2400+dc)
+  if (!wholesale) {
+    const suffixMatch = normalized.match(/\b([1-9]\d{2,4})\s*(?:only|net|fix|fixed|\+dc|plus\s*dc|advance)\b/i);
+    if (suffixMatch) {
+      const val = parseInt(suffixMatch[1], 10);
+      if (val >= 750 && val <= 25000) {
+        wholesale = val;
+      }
+    }
+  }
+
+  // Priority 6: Bottom-Up line scanner for suit prices (850 to 25,000), ignoring phone numbers and years
+  if (!wholesale) {
+    const lines = normalized.split('\n');
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i].trim();
+      // Skip contact lines
+      if (/^(?:contact|whatsapp|call|phone|booking|jazzcash|easypaisa|\+?92|03\d{2})/i.test(line)) continue;
+
+      const numbers = line.match(/\b([1-9]\d{2,4})\b/g);
+      if (numbers) {
+        for (const numStr of numbers) {
+          const n = parseInt(numStr, 10);
+          if (n >= 850 && n <= 25000 && n !== 2024 && n !== 2025 && n !== 2026 && n !== 2027) {
+            wholesale = n;
+            break;
+          }
+        }
+      }
+      if (wholesale) break;
+    }
+  }
+
+  if (!wholesale || wholesale < 750 || wholesale > 25000) return null;
 
   // Selling rate with retail markup (rounded to nearest 50)
   const retail = Math.round((wholesale * (1 + CONFIG.PROFIT_MARKUP_PERCENT / 100)) / 50) * 50;
@@ -156,10 +217,10 @@ function parseCaption(text) {
   const lower = text.toLowerCase();
   if (/\b(bed|sheet|sheets|bedsheet|razae|pillow|cushion|palachi|comforter|quilt)\b/i.test(lower)) {
     category = 'BEDSHEETS';
+  } else if (/\b(gents|men|mens|man|mardana|boski|kamalia|wash\s*[\'&]\s*wear|wash\s*n\s*wear|washnwear|w&w|pasha|grace|dynasty|latha|hard\s*cotton|soft\s*cotton|egyptian\s*cotton|cotton\s*fabric|gents\s*khaddar|men\s*khaddar|gents\s*suit|men\s*suit|unstitched\s*gents|shawls\s*men)\b/i.test(lower) && !/\b(maria\s*b|ladies|women|kids|frock|kurti|dupatta|lawn\s*3pc|lawn\s*2pc)\b/i.test(lower)) {
+    category = 'GENTS';
   } else if (/\b(2pc|2-pc|2\s*piece|two\s*piece)\b/i.test(lower)) {
     category = 'LAWN_2PC';
-  } else if (/\b(gents|men|mens|man|boski|wash\s*[\'&]\s*wear|cotton\s*fabric|skardu\s*wool)\b/i.test(lower) && !/\b(maria\s*b|ladies|women|kids|frock|kurti|dupatta)\b/i.test(lower)) {
-    category = 'GENTS';
   } else {
     category = 'LAWN_3PC';
   }
@@ -218,6 +279,20 @@ function parseCaption(text) {
   };
 }
 
+async function getGroupName(sock, fromJid) {
+  if (GROUP_NAME_CACHE.has(fromJid)) {
+    return GROUP_NAME_CACHE.get(fromJid);
+  }
+  try {
+    const meta = await sock.groupMetadata(fromJid);
+    if (meta && meta.subject) {
+      GROUP_NAME_CACHE.set(fromJid, meta.subject);
+      return meta.subject;
+    }
+  } catch (e) {}
+  return "Verified Wholesaler";
+}
+
 async function startBot() {
   console.log('🔄 Loading WhatsApp auth credentials...');
   const { state, saveCreds } = await useMultiFileAuthState('./session_data');
@@ -259,8 +334,7 @@ async function startBot() {
       setTimeout(startBot, 4000);
     } else if (connection === 'open') {
       console.log('\n======================================================');
-      console.log('🎉 BOT 100% ONLINE & LISTENING TO APPROVED WHOLESALE GROUPS:');
-      CONFIG.TARGET_GROUPS.forEach((g, i) => console.log(`   ${i + 1}. ${g}`));
+      console.log('🎉 BOT 100% ONLINE & LISTENING TO ALL WHOLESALE GROUPS!');
       console.log('======================================================\n');
     }
   });
@@ -272,13 +346,7 @@ async function startBot() {
     const fromJid = msg.key.remoteJid;
     if (!fromJid.endsWith('@g.us')) return;
 
-    let groupSubject = '';
-    try {
-      const groupMeta = await sock.groupMetadata(fromJid);
-      groupSubject = groupMeta.subject || '';
-    } catch (e) {
-      // fallback
-    }
+    const groupSubject = await getGroupName(sock, fromJid);
 
     // Whitelist check: If TARGET_GROUPS has items, check them; otherwise allow all WhatsApp groups!
     const isApprovedGroup = (CONFIG.TARGET_GROUPS.length === 0) || CONFIG.TARGET_GROUPS.some(allowedName => 
@@ -304,7 +372,9 @@ async function startBot() {
 
     const batch = GROUP_BATCHES.get(fromJid);
     batch.lastSeen = Date.now();
-    if (groupSubject) batch.groupName = groupSubject;
+    if (groupSubject && groupSubject !== "Verified Wholesaler") {
+      batch.groupName = groupSubject;
+    }
 
     // Collect image buffer
     if (isImage) {
@@ -322,18 +392,19 @@ async function startBot() {
       batch.caption = incomingText;
     }
 
-    // Schedule processing after 12 seconds of quiet period (allows all images in batch to finish arriving)
+    // Schedule processing after 18 seconds of quiet period (allows all images in batch to finish arriving)
     if (batch.timer) clearTimeout(batch.timer);
 
     batch.timer = setTimeout(async () => {
       try {
         if (!batch.caption) {
-          console.log(`⏳ Received ${batch.images.length} images from ${batch.groupName}, still waiting for caption...`);
+          console.log(`⏳ Received ${batch.images.length} images from "${batch.groupName}", still waiting for caption...`);
           return;
         }
 
         const parsed = parseCaption(batch.caption);
         if (!parsed) {
+          console.log(`⚠️ Could not detect wholesale price in message from "${batch.groupName}". Skipping.`);
           GROUP_BATCHES.delete(fromJid);
           return;
         }
@@ -349,14 +420,15 @@ async function startBot() {
           return;
         }
 
-        // Upload images to CDN / Host
-        const uploadedUrls = [];
-        const imagesToUpload = batch.images.slice(0, 15);
+        // Fast Parallel Image Uploading to CDN (up to 12 images simultaneously)
+        const imagesToUpload = batch.images.slice(0, 12);
+        console.log(`🚀 Uploading ${imagesToUpload.length} images simultaneously...`);
 
-        for (let i = 0; i < imagesToUpload.length; i++) {
-          const url = await uploadImageToCDN(imagesToUpload[i]);
-          if (url) uploadedUrls.push(url);
-        }
+        const uploadPromises = imagesToUpload.map(buf => uploadImageToCDN(buf));
+        const results = await Promise.allSettled(uploadPromises);
+        const uploadedUrls = results
+          .filter(r => r.status === 'fulfilled' && r.value)
+          .map(r => r.value);
 
         // Abort if all image uploads failed
         if (uploadedUrls.length === 0) {
@@ -364,7 +436,7 @@ async function startBot() {
           return;
         }
 
-        console.log(`🌐 Successfully Uploaded ${uploadedUrls.length} Real Suit Image(s):`, uploadedUrls);
+        console.log(`🌐 Successfully Uploaded ${uploadedUrls.length} Real Suit Image(s):`, uploadedUrls[0]);
 
         // Send full payload to website webhook
         await axios.post(CONFIG.SITE_WEBHOOK_URL, {
@@ -379,7 +451,8 @@ async function startBot() {
           supplier: batch.groupName,
           tag: 'JUST ARRIVED'
         }, {
-          headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` }
+          headers: { 'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}` },
+          timeout: 25000
         });
 
         console.log(`🎉 100% POSTED TO trysasta.com & GOOGLE SHEET WITH SUPPLIER: "${batch.groupName}" & ALL DESIGNS!\n`);
@@ -388,7 +461,7 @@ async function startBot() {
       } finally {
         GROUP_BATCHES.delete(fromJid);
       }
-    }, 12000);
+    }, 18000);
   });
 }
 
