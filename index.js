@@ -5,7 +5,7 @@
  * 2. Real Supplier Name Tagging: Sends the exact WhatsApp Group / Supplier name to cPanel & Google Sheet
  * 3. Arabic & Bismillah Remover: Clean professional titles without Bismillah or vendor icons
  * 4. Vendor Wholesale Price Excluder: Prevents vendor rate lines from leaking into specifications
- * 5. Direct Catbox.moe CDN with ImgBB fallback: Never fallback to dummy pictures
+ * 5. Direct cPanel Hosting Upload with Catbox/Litterbox fallback: Never fallbacks to dummy pictures
  */
 
 console.log('🚀 [TRY SASTA BOT] Initializing engine...');
@@ -41,10 +41,33 @@ const GROUP_BATCHES = new Map();
 
 /**
  * Robust CDN Uploader:
- * Uploads real buffer to Catbox.moe (or ImgBB fallback)
+ * Uploads real buffer to trysasta.com cPanel (or Catbox/Litterbox fallback)
  */
 async function uploadImageToCDN(buffer) {
-  // Method 1: Catbox.moe
+  // Method 1: Direct Upload to trysasta.com hosting (Most reliable, never rate-limited)
+  try {
+    const form = new FormData();
+    form.append('image', buffer, {
+      filename: `suit_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`,
+      contentType: 'image/jpeg'
+    });
+
+    const res = await axios.post('https://trysasta.com/api/upload_image.php', form, {
+      headers: {
+        ...form.getHeaders(),
+        'Authorization': `Bearer ${CONFIG.WEBHOOK_TOKEN}`
+      },
+      timeout: 25000
+    });
+
+    if (res.data && res.data.status === 'success' && res.data.url) {
+      return res.data.url;
+    }
+  } catch (errHost) {
+    console.warn('⚠️ Direct hosting upload notice:', errHost.message);
+  }
+
+  // Method 2: Catbox.moe CDN fallback
   try {
     const form = new FormData();
     form.append('reqtype', 'fileupload');
@@ -54,31 +77,37 @@ async function uploadImageToCDN(buffer) {
     });
 
     const res = await axios.post('https://catbox.moe/user/api.php', form, {
-      headers: form.getHeaders(),
+      headers: {
+        ...form.getHeaders(),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
       timeout: 25000
     });
 
     if (res.data && typeof res.data === 'string' && res.data.startsWith('http')) {
       return res.data.trim();
     }
-  } catch (err1) {
-    console.warn('⚠️ Catbox notice:', err1.message);
+  } catch (errCatbox) {
+    console.warn('⚠️ Catbox notice:', errCatbox.message);
   }
 
-  // Method 2: ImgBB fallback
+  // Method 3: Litterbox CDN fallback
   try {
     const form = new FormData();
-    form.append('image', buffer.toString('base64'));
-    const res = await axios.post(`https://api.imgbb.com/1/upload?key=${CONFIG.IMGBB_API_KEY}`, form, {
+    form.append('reqtype', 'fileupload');
+    form.append('time', '72h');
+    form.append('fileToUpload', buffer, {
+      filename: `suit_${Date.now()}.jpg`,
+      contentType: 'image/jpeg'
+    });
+    const res = await axios.post('https://litterbox.catbox.moe/resources/internals/api.php', form, {
       headers: form.getHeaders(),
       timeout: 25000
     });
-    if (res.data?.data?.url) {
-      return res.data.data.url;
+    if (res.data && typeof res.data === 'string' && res.data.startsWith('http')) {
+      return res.data.trim();
     }
-  } catch (err2) {
-    console.warn('⚠️ ImgBB notice:', err2.message);
-  }
+  } catch (errLit) {}
 
   return null;
 }
@@ -125,11 +154,11 @@ function parseCaption(text) {
 
   let category = 'LAWN_3PC';
   const lower = text.toLowerCase();
-  if (lower.includes('razae') || lower.includes('bed') || lower.includes('sheet') || lower.includes('pillow') || lower.includes('cushion') || lower.includes('palachi')) {
+  if (/\b(bed|sheet|sheets|bedsheet|razae|pillow|cushion|palachi|comforter|quilt)\b/i.test(lower)) {
     category = 'BEDSHEETS';
-  } else if (lower.includes('maria b') || lower.includes('kids') || lower.includes('ladies') || lower.includes('lawn') || lower.includes('dhanak') || lower.includes('linen') || lower.includes('karandi') || lower.includes('kurti') || lower.includes('dupatta') || lower.includes('chiffon') || (lower.includes('shawl') && !lower.includes('men')) || lower.includes('frock')) {
-    category = (lower.includes('2pc') || lower.includes('2-pc') || lower.includes('2 piece')) ? 'LAWN_2PC' : 'LAWN_3PC';
-  } else if (lower.includes('gents') || lower.includes('men') || lower.includes('boski') || lower.includes('wash & wear') || lower.includes('cotton fabric') || lower.includes('skardu wool')) {
+  } else if (/\b(2pc|2-pc|2\s*piece|two\s*piece)\b/i.test(lower)) {
+    category = 'LAWN_2PC';
+  } else if (/\b(gents|men|mens|man|boski|wash\s*[\'&]\s*wear|cotton\s*fabric|skardu\s*wool)\b/i.test(lower) && !/\b(maria\s*b|ladies|women|kids|frock|kurti|dupatta)\b/i.test(lower)) {
     category = 'GENTS';
   } else {
     category = 'LAWN_3PC';
@@ -314,7 +343,13 @@ async function startBot() {
         console.log(`💰 Wholesale Rate: Rs. ${parsed.wholesaleRate} -> Retail: Rs. ${parsed.retailPrice}`);
         console.log(`📸 Total Images Collected: ${batch.images.length}`);
 
-        // Upload images to CDN (limit to max 12 per batch for speed, or first image)
+        // If no images were received with this post, skip to avoid listing without photos
+        if (!batch.images || batch.images.length === 0) {
+          console.log(`⚠️ No photos received for "${parsed.title}" from "${batch.groupName}". Skipping dummy listing.`);
+          return;
+        }
+
+        // Upload images to CDN / Host
         const uploadedUrls = [];
         const imagesToUpload = batch.images.slice(0, 15);
 
@@ -323,12 +358,13 @@ async function startBot() {
           if (url) uploadedUrls.push(url);
         }
 
-        // If no image was received in batch, retain primary placeholder
+        // Abort if all image uploads failed
         if (uploadedUrls.length === 0) {
-          uploadedUrls.push('https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600');
+          console.error(`❌ Image upload failed for "${parsed.title}". Aborting to prevent listing without photos.`);
+          return;
         }
 
-        console.log(`🌐 Uploaded CDN URLs (${uploadedUrls.length}):`, uploadedUrls);
+        console.log(`🌐 Successfully Uploaded ${uploadedUrls.length} Real Suit Image(s):`, uploadedUrls);
 
         // Send full payload to website webhook
         await axios.post(CONFIG.SITE_WEBHOOK_URL, {
